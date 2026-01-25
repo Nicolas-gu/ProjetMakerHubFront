@@ -1,5 +1,11 @@
 <div class="main">
-    <button routerLink="home">HOME</button>
-    <button routerLink="recipe">Recettes</button>
-    <button routerLink="recipe-add">Ajouter recette</button>
+    <button (click)="goTOHome()" class="nav-button">
+        <mat-icon>home</mat-icon>
+    </button>
+    <h1>MealCraft</h1>
+    <button matButton [matMenuTriggerFor]="menu" class="nav-button"><mat-icon>menu</mat-icon></button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="goToIngredients()">Ingrédients</button>
+            <button mat-menu-item (click)="goToFavoris()" ><mat-icon>star</mat-icon>Favoris</button>
+        </mat-menu>
 </div>

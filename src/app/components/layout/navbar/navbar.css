@@ -1,9 +1,16 @@
 .main{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     background-color:lightsalmon;
-    padding: 20px;
+    padding: 15px;
+    border-radius: 0 0 10px 10px;
+}
+.nav-button{
+    border-radius: 5px;
+    border: none;
+    box-shadow: 2px 2px 10px;
+    height: 45px;
+    width: 45px;
 }
 
-button{
-    height: 35px;
-    width: 120px;
-}
