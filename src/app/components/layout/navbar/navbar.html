@@ -1,11 +1,14 @@
 <div class="main">
-    <button (click)="goTOHome()" class="nav-button">
+    <button routerLink="home" class="nav-button">
         <mat-icon>home</mat-icon>
     </button>
-    <h1>MealCraft</h1>
+    <h1>MealForge</h1>
     <button matButton [matMenuTriggerFor]="menu" class="nav-button"><mat-icon>menu</mat-icon></button>
         <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="goToIngredients()">Ingrédients</button>
-            <button mat-menu-item (click)="goToFavoris()" ><mat-icon>star</mat-icon>Favoris</button>
+            <button mat-menu-item routerLink="pantry-item"><mat-icon>local_pizza</mat-icon>Ingrédients à la maison</button>
+            <button mat-menu-item routerLink="ingredient-list"><mat-icon>local_pizza</mat-icon>Voir tous les ingrédients</button>
+            <button mat-menu-item routerLink="favorite" ><mat-icon>star</mat-icon>Recettes favorites</button>
+            <button mat-menu-item routerLink="planning" ><mat-icon>local_library</mat-icon>Mon planning</button>
+            <button mat-menu-item routerLink="login" ><mat-icon>logout</mat-icon>Déconnexion</button>
         </mat-menu>
 </div>

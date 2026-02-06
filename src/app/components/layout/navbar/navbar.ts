@@ -13,14 +13,6 @@ export class Navbar {
 
   constructor(private router: Router) {}
 
-  goTOHome(){
-    this.router.navigateByUrl("/home")
-  }
-  goToIngredients(){
-    this.router.navigateByUrl("/ingredient-list")
-  }
-  goToFavoris(){
-    this.router.navigateByUrl("/favorite")
-  }
+  
 
 }
