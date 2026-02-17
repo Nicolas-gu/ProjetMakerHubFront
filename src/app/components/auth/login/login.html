@@ -1,5 +1,5 @@
 <div class="login-page">
-  <div class="login-card">
+  <div class="card">
     <h1>Connexion</h1>
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
@@ -38,7 +38,7 @@
         }
       </div>
 
-      <button class="btn full-width connect" type="submit" [disabled]="loginForm.invalid || loading">
+      <button class="btn full-width margin-top-button" type="submit" [disabled]="loginForm.invalid || loading">
         {{ loading ? 'Connexion…' : 'Se connecter' }}
       </button>
 

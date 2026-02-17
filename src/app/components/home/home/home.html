@@ -1,15 +1,13 @@
+<div class="home-page">
+  <div class="page">
+    <section class="card planning">
+      <app-planning></app-planning>
+    </section>
 
-<div class="main">
-    <div class="planning">
-        <app-planning-day></app-planning-day>
-    </div>
-    <div class="main-button">
-        <button (click)="goToRecipeSearch()">Chercher recette</button>
-        <button (click)="goToRecipeProposal()">Proposer recette</button>
-        <button matButton [matMenuTriggerFor]="menu"><mat-icon>add</mat-icon>recette</button>
-        <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="goToRecipeAdd()" >Item 1</button>
-            <button mat-menu-item>Item 2</button>
-        </mat-menu>
-    </div>
+    <section class="actions">
+      <button class="btn full-width">Chercher recette</button>
+      <button class="btn full-width">Proposer recette</button>
+      <button class="btn full-width">Recette</button>
+    </section>
+  </div>
 </div>

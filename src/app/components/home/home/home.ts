@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatIcon } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu'
-import { PlanningDay } from '../../planning/planning-day/planning-day';
+import { Planning } from '../../planning/planning/planning';
 
 @Component({
   selector: 'app-home',
-  imports: [MatIcon, MatMenuModule, PlanningDay],
+  imports: [ MatMenuModule, Planning],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })

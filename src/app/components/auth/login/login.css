@@ -1,18 +1,4 @@
-:host {
-  --text: #ffffff;
-  --text-muted: rgba(245, 245, 245, 0.82);
 
-  --glass: rgba(18, 18, 18, 0.50);
-  --glass-strong: rgba(18, 18, 18, 0.62);
-
-  --border: rgba(0, 230, 168, 0.28);
-  --border-strong: rgba(0, 230, 168, 0.45);
-
-  --glow: rgba(0, 230, 168, 0.22);
-  --glow-soft: rgba(0, 230, 168, 0.12);
-
-  --error: #f51f1f;
-}
 
 .login-page {
   min-height: 100dvh;
@@ -20,71 +6,13 @@
   justify-content: center;
   align-items: flex-start;
   padding: 120px 16px;
-  background: linear-gradient(160deg, #172411 0%, #000000 100%);
   font-family: "Roboto", sans-serif;
-  color: var(--text);
-}
-
-.login-card {
-  width: 100%;
-  max-width: 460px;
-  border-radius: 22px;
-  padding: clamp(18px, 3vw, 28px);
-  position: relative;
-  overflow: hidden;
-
-  background: linear-gradient(165deg, #357f27 0%, #033013 55%, #073b37 100%);
-
-  /* glass */
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-
-  box-shadow:
-    0 18px 50px rgba(0, 0, 0, 0.55),
-    0 0 0 1px rgba(0, 200, 150, 0.12) inset,
-    0 0 40px rgba(0, 230, 168, 0.10);
-
-  transform: translateZ(0);
-}
-
-.login-card::before {
-  content: "";
-  position: absolute;
-  inset: -2px;
-  border-radius: 24px;
-  background:
-    radial-gradient(circle at 30% 18%, rgba(0, 230, 168, 0.28), transparent 52%),
-    radial-gradient(circle at 70% 85%, rgba(0, 230, 168, 0.16), transparent 55%);
-  pointer-events: none;
-  opacity: 0.95;
-}
-
-.login-card::after {
-  /* sheen glass subtil */
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.14) 0%,
-    rgba(255, 255, 255, 0.04) 22%,
-    transparent 45%
-  );
-  mix-blend-mode: soft-light;
-  opacity: 0.65;
-}
-
-.login-card h1 {
-  position: relative;
-  margin: 0 0 18px;
-  font-size: clamp(22px, 2.2vw, 28px);
-  letter-spacing: 0.5px;
+  color: var(--color-text-primary);
 }
 
 .full-width { width: 100%; }
 
-.connect{
+.margin-top-button{
   margin-top: 25px;
 }
 
@@ -102,7 +30,7 @@ form {
 
 label {
   font-size: 0.95rem;
-  color: var(--text);
+  color: var(--color-text-primary);
   letter-spacing: 0.2px;
 }
 
@@ -113,7 +41,7 @@ input {
   padding: 0 14px;
   outline: none;
 
-  color: var(--text);
+  color: var(--color-text-primary);
   background: rgba(18, 18, 18, 0.52);
 
   /* bordure plus prononcée */
@@ -162,7 +90,7 @@ input.invalid {
 .form-error {
   margin: 4px 0 0;
   font-size: 0.9rem;
-  color: var(--error);
+  color: var(--color-error);
 }
 
 
@@ -170,11 +98,11 @@ input.invalid {
 /* ====== RESPONSIVE ====== */
 @media (max-width: 600px) {
   .login-page { padding: 120px 18px; }
-  .login-card { max-width: 420px; margin: 0 auto; }
+  .login-card { max-width: 480px; margin: 0 auto; }
 }
 
 @media (min-width: 601px) and (max-width: 1024px) {
-  .login-card { max-width: 520px; }
+  .login-card { max-width: 480px; }
 }
 
 @media (min-width: 1025px) {

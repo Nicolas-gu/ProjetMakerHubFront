@@ -1,18 +1,28 @@
-.main{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color:var(--color-bg-surface);
-    color: var(--color-text-primary);
-    padding: 15px;
-    height: 45px;
+.main-nav-bar{
+  position: fixed;      /* 🔥 overlay */
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  z-index: 1000;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 15px;
+
+  
+
+  color: var(--color-text-primary);
 }
+
 
 .main.centered{
     justify-content: center;
 }
 .nav-button{
-    height: 45px;
-    width: 45px;
+    height: 40px;
+    width: 40px;
 }
 
