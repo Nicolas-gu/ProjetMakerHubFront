@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { TokenService } from '../../../core/services/token-service';
+import { AuthService } from '../../../core/services/auth-service';
 
 @Component({
   selector: 'app-navbar',
@@ -11,8 +13,9 @@ import { MatMenuModule } from '@angular/material/menu';
 })
 export class Navbar {
 
-  constructor(private router: Router) {}
+  private _authService = inject(AuthService)
 
-  
-
+  logout(){
+    this._authService.logout();
+  }
 }

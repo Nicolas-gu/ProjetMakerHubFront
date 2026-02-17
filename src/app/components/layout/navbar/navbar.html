@@ -9,6 +9,6 @@
             <button mat-menu-item routerLink="ingredient-list"><mat-icon>local_pizza</mat-icon>Voir tous les ingrédients</button>
             <button mat-menu-item routerLink="favorite" ><mat-icon>star</mat-icon>Recettes favorites</button>
             <button mat-menu-item routerLink="planning" ><mat-icon>local_library</mat-icon>Mon planning</button>
-            <button mat-menu-item routerLink="login" ><mat-icon>logout</mat-icon>Déconnexion</button>
+            <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon>Déconnexion</button>
         </mat-menu>
 </div>
