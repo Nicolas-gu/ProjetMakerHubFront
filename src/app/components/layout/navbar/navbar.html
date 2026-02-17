@@ -1,14 +1,18 @@
-<div class="main">
-    <button routerLink="home" class="nav-button">
+<div class="main" [class.centered]="!_tokenService.isLoggedIn()">
+    @if(_tokenService.isLoggedIn()){
+        <button routerLink="home" class="btn nav-button">
         <mat-icon>home</mat-icon>
-    </button>
+        </button>
+    }
     <h1>MealForge</h1>
-    <button matButton [matMenuTriggerFor]="menu" class="nav-button"><mat-icon>menu</mat-icon></button>
-        <mat-menu #menu="matMenu">
-            <button mat-menu-item routerLink="pantry-item"><mat-icon>local_pizza</mat-icon>Ingrédients à la maison</button>
-            <button mat-menu-item routerLink="ingredient-list"><mat-icon>local_pizza</mat-icon>Voir tous les ingrédients</button>
-            <button mat-menu-item routerLink="favorite" ><mat-icon>star</mat-icon>Recettes favorites</button>
-            <button mat-menu-item routerLink="planning" ><mat-icon>local_library</mat-icon>Mon planning</button>
-            <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon>Déconnexion</button>
-        </mat-menu>
+    @if(_tokenService.isLoggedIn()){
+        <button matButton [matMenuTriggerFor]="menu" class="btn nav-button"><mat-icon>menu</mat-icon></button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item class="btn full-width" routerLink="pantry-item"><mat-icon>local_pizza</mat-icon>Ingrédients à la maison</button>
+                <button mat-menu-item class="btn full-width" routerLink="ingredient-list"><mat-icon>local_pizza</mat-icon>Voir tous les ingrédients</button>
+                <button mat-menu-item class="btn full-width" routerLink="favorite" ><mat-icon>star</mat-icon>Recettes favorites</button>
+                <button mat-menu-item class="btn full-width" routerLink="planning" ><mat-icon>local_library</mat-icon>Mon planning</button>
+                <button mat-menu-item class="btn full-width" (click)="logout()"><mat-icon>logout</mat-icon>Déconnexion</button>
+            </mat-menu>
+    }
 </div>

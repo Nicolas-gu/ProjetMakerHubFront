@@ -19,13 +19,12 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 40px 16px;
+  padding: 120px 16px;
   background: linear-gradient(160deg, #172411 0%, #000000 100%);
   font-family: "Roboto", sans-serif;
   color: var(--text);
 }
 
-/* ====== CARD (VERT / ARRONDI / GLASS + GLOW) ====== */
 .login-card {
   width: 100%;
   max-width: 460px;
@@ -83,8 +82,11 @@
   letter-spacing: 0.5px;
 }
 
-/* ====== FORM ====== */
 .full-width { width: 100%; }
+
+.connect{
+  margin-top: 25px;
+}
 
 form {
   position: relative;
@@ -157,64 +159,17 @@ input.invalid {
   color: rgb(255, 95, 95);
 }
 
-/* erreur globale */
 .form-error {
   margin: 4px 0 0;
   font-size: 0.9rem;
   color: var(--error);
 }
 
-/* ====== BUTTON (plus clair, 3D, arrondi, ombre légère) ====== */
-.btn {
-  height: 46px;
-  border-radius: 16px;
-  border: 1px solid rgba(0, 230, 168, 0.35);
-  cursor: pointer;
 
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  color:var(--text);
-
-  /* plus clair (proche du vert clair du haut du dégradé de la card) */
-  background: linear-gradient(180deg, #66c85b 0%, #2f9f63 100%);
-
-  /* effet 3D + glow subtil */
-  box-shadow:
-    0 12px 26px rgba(0, 230, 168, 0.16),
-    0 6px 0 rgba(0, 0, 0, 0.22),
-    0 0 0 1px rgba(0, 0, 0, 0.22) inset,
-    0 0 18px rgba(0, 230, 168, 0.10);
-
-  transition: transform 120ms ease, filter 120ms ease, box-shadow 120ms ease;
-}
-
-.btn:hover:not(:disabled) {
-  filter: brightness(1.06);
-  transform: translateY(-1px);
-  box-shadow:
-    0 14px 30px rgba(0, 230, 168, 0.18),
-    0 7px 0 rgba(0, 0, 0, 0.20),
-    0 0 0 1px rgba(0, 0, 0, 0.22) inset,
-    0 0 22px rgba(0, 230, 168, 0.12);
-}
-
-.btn:active:not(:disabled) {
-  transform: translateY(1px);
-  box-shadow:
-    0 9px 18px rgba(0, 230, 168, 0.14),
-    0 3px 0 rgba(0, 0, 0, 0.26),
-    0 0 0 1px rgba(0, 0, 0, 0.24) inset;
-}
-
-.btn:disabled {
-  opacity: 0.58;
-  cursor: not-allowed;
-  filter: saturate(0.85);
-}
 
 /* ====== RESPONSIVE ====== */
 @media (max-width: 600px) {
-  .login-page { padding: 100px 18px; }
+  .login-page { padding: 120px 18px; }
   .login-card { max-width: 420px; margin: 0 auto; }
 }
 

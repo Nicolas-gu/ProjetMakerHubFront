@@ -6,8 +6,6 @@
     <div class="main-button">
         <button (click)="goToRecipeSearch()">Chercher recette</button>
         <button (click)="goToRecipeProposal()">Proposer recette</button>
-    </div>
-    <div class="add-button">
         <button matButton [matMenuTriggerFor]="menu"><mat-icon>add</mat-icon>recette</button>
         <mat-menu #menu="matMenu">
             <button mat-menu-item (click)="goToRecipeAdd()" >Item 1</button>
