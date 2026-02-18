@@ -13,13 +13,16 @@ export const routes: Routes = [
     { path: "planning", 
         loadComponent: () => import("./components/planning/planning/planning").then(r => r.Planning), canActivate: [authGuard]
     },
-    { path: "favorite", 
+    { path: "recipe/favorite", 
         loadComponent: () => import("./components/recipe/favorite/favorite").then(r => r.Favorite), canActivate: [authGuard]
     },
-    { path: "recipe", 
-        loadComponent: () => import("./components/recipe/recipe-list/recipe-list").then(r => r.RecipeList), canActivate: [authGuard]
+    { path: "recipe/search", 
+        loadComponent: () => import("./components/recipe/recipe-search/recipe-search").then(r => r.RecipeSearch), canActivate: [authGuard]
     },
-    { path: "recipe-add", 
+    { path: "recipe/:id", 
+        loadComponent: () => import("./components/recipe/recipe-detail/recipe-detail").then(r => r.RecipeDetail), canActivate: [authGuard]
+    },
+    { path: "recipe/add", 
         loadComponent: () => import("./components/recipe/recipe-add/recipe-add").then(r => r.RecipeAdd), canActivate: [authGuard]
     },
     { path: "ingredient-list", 

@@ -1,44 +1,110 @@
+<section class="planning-root">
+  <!-- Header -->
+  <header class="planning-header">
+    <div class="title">Planning</div>
 
-<section class="planning">
-  <header class="planning__header">
-    <h2>Planning</h2>
-
-    @if(isoDateWeekStart() && weekOptions) {
-
-        <label>
-          Semaine :
-          <select #weekSelect [ngModel]="isoDateWeekStart()" (ngModelChange)="onWeekChangeValue(weekSelect.value)">
-            @for (w of weekOptions; track toIsoDate(w.value)) {
-                <option [value]="toIsoDate(w.value)">{{ w.label }}</option>
-            }
-          </select>
-        </label>
-    }
+    <button class="week-pill" type="button" (click)="openWeekPicker()">
+      {{ weekOptions?.length ? ('Semaine du ' + (selectedWeekStart() | date:'shortDate')) : 'Choisir semaine' }}
+      <span class="chev">▾</span>
+    </button>
   </header>
 
-  <div class="planning__nav"> 
-    <button type="button" (click)="prevDay()">←</button>
+  @if (loading()) { <div class="state">Chargement…</div> }
+  @if (error) { <div class="state error">{{ error }}</div> }
 
-    <div class="planning__daytitle">
-      {{ selectedDay() | date:'fullDate'}}
+  <!-- Deck / Carousel -->
+  <div class="deck"
+       (pointerdown)="onPointerDown($event)"
+       (pointermove)="onPointerMove($event)"
+       (pointerup)="onPointerUp()"
+       (pointercancel)="onPointerUp()">
+
+    <div class="cards">
+      @for (d of weekDays(); track $index; let i = $index) {
+        <article class="day-card"
+                 [class.active]="i === activeIndex()"
+                 [ngStyle]="cardStyle(i)"
+                 (click)="onCardClick(i)">
+
+          <div class="day-card__head">
+            <div class="day-card__date">{{ d | date:'EEEE d MMM' }}</div>
+            <div class="day-card__sub" *ngIf="i === activeIndex()">Glisse ←/→ pour changer de jour</div>
+          </div>
+
+          <!-- Slots -->
+          <div class="slots">
+            @for (t of slotTypes; track t) {
+              <div class="slot-row">
+                <div class="slot-left">
+                  <div class="slot-label">{{ label(t) }}</div>
+
+                  @if (slotFor(d, t); as s) {
+                    <button class="recipe-chip" type="button" (click)="openRecipe(s.recipeId)">
+                      <div class="recipe-title">{{ s.recipeTitle }}</div>
+                      <div class="recipe-meta">
+                        {{ s.portion }} p • Prep {{ s.prepTime }}m • Cook {{ s.cookTime }}m
+                      </div>
+                    </button>
+                  } @else {
+                    <div class="empty">Aucune recette</div>
+                  }
+                </div>
+
+                <div class="slot-actions">
+                  @if (i === activeIndex()) {
+                    @if (slotFor(d, t); as s) {
+                      <button class="btn btn-square" type="button" title="Supprimer" (click)="removeSlot(s.slotId)">🗑</button>
+                      <button class="btn" type="button" (click)="openAddMenu(d, t)">Modifier</button>
+                    } @else {
+                      <button class="btn" type="button" (click)="openAddMenu(d, t)">Ajouter</button>
+                    }
+                  }
+                </div>
+              </div>
+            }
+          </div>
+
+        </article>
+      }
     </div>
 
-    <button type="button" (click)="nextDay()">→</button>
+    <!-- Dots position -->
+    <div class="dots">
+      @for (_ of weekDays(); track $index; let i = $index) {
+        <span class="dot" [class.active]="i === activeIndex()"></span>
+      }
+    </div>
   </div>
 
-  
-  @if (weekData()) {
-      <app-planning-day
-      [day]="selectedDay()"
-      [week]="weekData()!">
-    </app-planning-day>
-}
+  <!-- Simple Add/Modify menu (overlay panel) -->
+  <div class="menu-layer" [class.open]="addMenuOpen()">
+    <div class="scrim" (click)="closeAddMenu()"></div>
 
-    @if (loading()) {
-    <div class="loading">Chargement…</div>
-    }
+    <div class="menu-panel">
+      <div class="menu-title">Ajouter une recette</div>
+      <button class="btn full-width" type="button" (click)="goSearch()">Chercher une recette</button>
+      <button class="btn full-width" type="button" (click)="goFavorites()">Choisir dans les favoris</button>
+      <button class="btn full-width" type="button" (click)="closeAddMenu()">Annuler</button>
+    </div>
+  </div>
 
-    @if (error) {
-    <div class="error">{{ error }}</div>
-    }
+  <!-- Week picker (drag up/down simple) -->
+  <div class="week-layer" [class.open]="weekPickerOpen()">
+    <div class="scrim" (click)="closeWeekPicker()"></div>
+
+    <div class="week-panel">
+      <div class="grab"></div>
+      <div class="week-title">Choisir une semaine</div>
+
+      <div class="week-list">
+        @for (w of weekOptions; track toIsoDate(w.value)) {
+          <button class="week-item" type="button" (click)="selectWeek(w.value)">
+            {{ w.label }}
+          </button>
+        }
+      </div>
+
+      <button class="btn full-width" type="button" (click)="closeWeekPicker()">Fermer</button>
+    </div>
+  </div>
 </section>
