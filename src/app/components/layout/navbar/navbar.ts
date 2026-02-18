@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Component, computed, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { TokenService } from '../../../core/services/token-service';
@@ -16,6 +16,8 @@ export class Navbar {
 
   private _authService = inject(AuthService)
   public _tokenService = inject(TokenService)
+
+  isLoggedIn = computed(() => !!this._tokenService.token());
 
   logout(){
     this._authService.logout();

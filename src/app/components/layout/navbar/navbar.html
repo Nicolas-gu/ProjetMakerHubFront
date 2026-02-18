@@ -1,11 +1,11 @@
-<div class="main-nav-bar" [class.centered]="!_tokenService.isLoggedIn()">
-    @if(_tokenService.isLoggedIn()){
+<div class="main-nav-bar" [class.centered]="!isLoggedIn()">
+    @if(isLoggedIn()){
         <button routerLink="home" class="btn btn-square nav-button">
         <mat-icon>home</mat-icon>
         </button>
     }
-    <h1>MealForge</h1>
-    @if(_tokenService.isLoggedIn()){
+    <h1>{{isLoggedIn()}}</h1>
+    @if(isLoggedIn()){
         <button matButton [matMenuTriggerFor]="menu" class="btn btn-square nav-button"><mat-icon>menu</mat-icon></button>
             <mat-menu #menu="matMenu">
                 <button mat-menu-item class="btn full-width" routerLink="pantry-item"><mat-icon>local_pizza</mat-icon>Ingrédients à la maison</button>

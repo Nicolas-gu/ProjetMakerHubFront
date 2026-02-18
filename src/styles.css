@@ -66,7 +66,6 @@ app-root{
   letter-spacing: 0.5px;
   color: var(--color-text-primary);
 
-  /* gradient plus volumique */
   background: linear-gradient(
     180deg,
     #7be06f 0%,
@@ -74,7 +73,6 @@ app-root{
     #2f9f63 100%
   );
 
-  /* 🔥 relief doux permanent */
   box-shadow:
     0 6px 14px rgba(0, 0, 0, 0.35),
     0 2px 0 rgba(255, 255, 255, 0.18) inset,
@@ -86,7 +84,6 @@ app-root{
     box-shadow 120ms ease;
 }
 
-
 .btn:hover:not(:disabled) {
   filter: brightness(1.08);
   transform: translateY(-1px);
@@ -97,7 +94,6 @@ app-root{
     0 -2px 6px rgba(0, 0, 0, 0.28) inset;
 }
 
-
 .btn:active:not(:disabled) {
   transform: translateY(1px);
 
@@ -106,7 +102,6 @@ app-root{
     0 3px 6px rgba(0, 0, 0, 0.35) inset;
 }
 
-
 .btn:disabled {
   opacity: 0.58;
   cursor: not-allowed;
@@ -114,8 +109,7 @@ app-root{
 }
 
 .btn-square {
-  border-radius: 12px; /* ou 14px selon ton goût */
-  width: 40px;
+  border-radius: 12px;
   height: 40px;
   padding: 0;
 }
@@ -131,7 +125,6 @@ app-root{
 
   background: linear-gradient(165deg, #357f27 0%, #033013 55%, #073b37 100%);
 
-  /* glass */
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 
@@ -156,7 +149,6 @@ app-root{
 }
 
 .card::after {
-  /* sheen glass subtil */
   content: "";
   position: absolute;
   inset: 0;

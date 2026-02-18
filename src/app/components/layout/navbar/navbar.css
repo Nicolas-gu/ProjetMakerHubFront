@@ -1,5 +1,5 @@
 .main-nav-bar{
-  position: fixed;      /* 🔥 overlay */
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -18,7 +18,7 @@
 }
 
 
-.main.centered{
+.main-nav-bar.centered{
     justify-content: center;
 }
 .nav-button{

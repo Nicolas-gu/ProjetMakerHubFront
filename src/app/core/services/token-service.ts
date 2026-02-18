@@ -1,5 +1,4 @@
-import { isPlatformBrowser } from '@angular/common';
-import { inject, Injectable, PLATFORM_ID } from '@angular/core';
+import {Injectable, signal } from '@angular/core';
 
 const TOKEN_KEY = 'token';
 
@@ -7,28 +6,21 @@ const TOKEN_KEY = 'token';
   providedIn: 'root',
 })
 export class TokenService {
-  private _platformId = inject(PLATFORM_ID);
 
-  private get isBrowser(): boolean {
-    return isPlatformBrowser(this._platformId);
-  }
+private _token = signal<string | null>(localStorage.getItem(TOKEN_KEY))
+readonly token = this._token.asReadonly();
 
   set(token: string): void {
-    if (!this.isBrowser) return;
     localStorage.setItem(TOKEN_KEY, token);
-  }
-
-  get(): string | null {
-    if (!this.isBrowser) return null;
-    return localStorage.getItem(TOKEN_KEY);
+    this._token.set(token);
   }
 
   clear(): void {
-    if (!this.isBrowser) return;
     localStorage.removeItem(TOKEN_KEY);
+    this._token.set(null);
   }
 
   isLoggedIn(): boolean {
-    return !!this.get();
+    return !!this.token();
   }
 }

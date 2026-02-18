@@ -1,1 +1,44 @@
-<h1>Planning</h1>
+
+<section class="planning">
+  <header class="planning__header">
+    <h2>Planning</h2>
+
+    @if(isoDateWeekStart() && weekOptions) {
+
+        <label>
+          Semaine :
+          <select #weekSelect [ngModel]="isoDateWeekStart()" (ngModelChange)="onWeekChangeValue(weekSelect.value)">
+            @for (w of weekOptions; track toIsoDate(w.value)) {
+                <option [value]="toIsoDate(w.value)">{{ w.label }}</option>
+            }
+          </select>
+        </label>
+    }
+  </header>
+
+  <div class="planning__nav"> 
+    <button type="button" (click)="prevDay()">←</button>
+
+    <div class="planning__daytitle">
+      {{ selectedDay() | date:'fullDate'}}
+    </div>
+
+    <button type="button" (click)="nextDay()">→</button>
+  </div>
+
+  
+  @if (weekData()) {
+      <app-planning-day
+      [day]="selectedDay()"
+      [week]="weekData()!">
+    </app-planning-day>
+}
+
+    @if (loading()) {
+    <div class="loading">Chargement…</div>
+    }
+
+    @if (error) {
+    <div class="error">{{ error }}</div>
+    }
+</section>

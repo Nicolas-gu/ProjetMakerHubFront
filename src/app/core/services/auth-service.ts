@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { LoginRequestDto } from '../../interfaces/login-request-dto';
 import { LoginResponseDto } from '../../interfaces/login-response-dto';
@@ -17,7 +17,8 @@ export class AuthService {
   private _router = inject(Router);
 
   login(dto: LoginRequestDto): Observable<LoginResponseDto>{
-    return this._http.post<LoginResponseDto>(`${environment.apiBaseUrl}/auth/login`, dto);
+    return this._http.post<LoginResponseDto>(`${environment.apiBaseUrl}/auth/login`, dto)
+    .pipe(tap(res => this._token.set(res.token)));
   }
 
   logout(redirectTo = '/login'): void {

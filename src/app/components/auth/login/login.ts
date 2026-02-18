@@ -64,6 +64,5 @@ export class Login {
         this.loginForm.markAllAsTouched();
         this._cdr.markForCheck();
       }})
-
   }
 }

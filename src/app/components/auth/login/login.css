@@ -34,7 +34,6 @@ label {
   letter-spacing: 0.2px;
 }
 
-/* ====== INPUTS (Rounded + Transparent + Bordure + Glow) ====== */
 input {
   height: 46px;
   border-radius: 16px;
@@ -44,7 +43,6 @@ input {
   color: var(--color-text-primary);
   background: rgba(18, 18, 18, 0.52);
 
-  /* bordure plus prononcée */
   border: 1px solid var(--border-strong);
 
   box-shadow:
@@ -80,7 +78,6 @@ input.invalid {
     0 10px 26px rgba(0, 0, 0, 0.22);
 }
 
-/* erreurs un peu plus petites */
 .field-error {
   margin: 2px 0 0;
   font-size: 0.82rem;
@@ -95,7 +92,6 @@ input.invalid {
 
 
 
-/* ====== RESPONSIVE ====== */
 @media (max-width: 600px) {
   .login-page { padding: 120px 18px; }
   .login-card { max-width: 480px; margin: 0 auto; }
