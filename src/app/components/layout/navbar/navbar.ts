@@ -1,5 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { TokenService } from '../../../core/services/token-service';
@@ -14,12 +14,17 @@ import { CommonModule } from '@angular/common';
 })
 export class Navbar {
 
-  private _authService = inject(AuthService)
-  public _tokenService = inject(TokenService)
+  private authService = inject(AuthService)
+  public tokenService = inject(TokenService)
+  private route = inject(Router)
 
-  isLoggedIn = computed(() => !!this._tokenService.token());
+  isLoggedIn = computed(() => !!this.tokenService.token());
 
   logout(){
-    this._authService.logout();
+    this.authService.logout();
   }
+
+  goShoppingList() {
+  this.route.navigate(['/shopping-list']);
+}
 }

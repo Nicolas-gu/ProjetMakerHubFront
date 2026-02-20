@@ -1,0 +1,43 @@
+<div class="page-shell">
+  <section class="card card--wide shopping-card">
+    <div class="top">
+      <div class="title">Liste de courses</div>
+      @if (weekStartIso) { <div class="sub">Semaine du {{ weekStartIso | date:'dd-MM-yyyy' }}</div> }
+    </div>
+
+    @if (loading()) { <div class="state">Chargement…</div> }
+    @if (error()) { <div class="state error">{{ error() }}</div> }
+
+    @if (!loading && !error && data === null) {
+      <div class="state">Aucune liste pour cette semaine.</div>
+    }
+
+    @if (data()) { 
+      <div class="add">
+        <input class="input" [(ngModel)]="newIngredientName" placeholder="Ajouter un ingrédient (ex: tomates)" />
+        <input class="input" [(ngModel)]="newQuantityText" placeholder="Quantité (ex: 2kg / 3 pcs)" />
+        <button class="btn" type="button" (click)="addManual()">Ajouter</button>
+      </div>
+
+      <div class="list">
+        @for (it of data()!.items; track it.id) {
+          <div class="row" [class.checked]="it.isChecked">
+            <input type="checkbox" [checked]="it.isChecked" (change)="toggle(it.id, $any($event.target).checked)" />
+
+            <div class="name">
+              <div class="main">{{ it.ingredientName }}</div>
+              <div class="meta">{{ formatQuantity(it.quantity, it.unit, it.quantityText) }}</div>
+
+              <input class="qty"
+                     [value]="it.quantityText ?? ''"
+                     placeholder="Modifier quantité (texte)"
+                     (change)="updateQuantityText(it.id, $any($event.target).value)" />
+            </div>
+
+            <button class="btn btn-square" type="button" title="Supprimer" (click)="remove(it.id)">🗑</button>
+          </div>
+        }
+      </div>
+    }
+  </section>
+</div>

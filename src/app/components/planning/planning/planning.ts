@@ -1,23 +1,24 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 
 import { PlanningService } from '../../../core/services/planning-service';
 import { PlanWeekDto, SlotType } from '../../../interfaces/Planning.models';
 import { addDays, toIsoDate, weekStartMonday } from '../../../shared/date-utils';
-import { MatIcon } from "@angular/material/icon";
-
 @Component({
   selector: 'app-planning',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIcon],
+  imports: [CommonModule, FormsModule ],
   templateUrl: './planning.html',
   styleUrl: './planning.css',
 })
 export class Planning implements OnInit {
   private planningService = inject(PlanningService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
+  weekStartChange = output<Date>();
 
   private lastLoadedWeekIso: string | null = null;
   loading = signal(false);
@@ -30,20 +31,16 @@ export class Planning implements OnInit {
   isoDateWeekStart = computed(() => toIsoDate(this.selectedWeekStart()));
   toIsoDate = toIsoDate;
 
-  // --- Slot types strongly typed (fix "number not assignable to SlotType")
   slotTypes: readonly SlotType[] = [1, 2, 3];
 
-  // --- Deck
   activeIndex = signal(0);
   private dragging = false;
   private didDrag = false;
   private startX = 0;
   dragX = signal(0);
 
-  // --- Week picker (drag up/down panel)
   weekPickerOpen = signal(false);
 
-  // --- Add/Modify menu state (simple panel)
   addMenuOpen = signal(false);
   addMenuDay = signal<Date | null>(null);
   addMenuType = signal<SlotType | null>(null);
@@ -62,12 +59,16 @@ export class Planning implements OnInit {
     const today = new Date();
     this.buildWeekOptions(today);
 
+    const qs = this.route.snapshot.queryParamMap.get('weekStart');
+    const mondayFromUrl = qs ? parseIsoDate(qs) : null;
+
     const monday = weekStartMonday(today);
     this.selectedWeekStart.set(monday);
 
+    const refDay = mondayFromUrl ?? today;
     const idx = Math.max(
       0,
-      Math.min(6, Math.floor((toDayStart(today).getTime() - toDayStart(monday).getTime()) / 86400000))
+      Math.min(6, Math.floor((toDayStart(refDay).getTime() - toDayStart(monday).getTime()) / 86400000))
     );
     this.activeIndex.set(idx);
 
@@ -88,18 +89,17 @@ export class Planning implements OnInit {
     this.weekOptions = option;
   }
 
-  // --- Week picker
   openWeekPicker() { this.weekPickerOpen.set(true); }
   closeWeekPicker() { this.weekPickerOpen.set(false); }
 
   selectWeek(ws: Date) {
     this.selectedWeekStart.set(ws);
     this.activeIndex.set(0);
+    this.weekStartChange.emit(ws);
     this.closeWeekPicker();
     this.loadWeek(ws);
   }
 
-  // --- Slot helpers
   label(type: SlotType): string {
     switch (type) {
       case 1: return 'Petit déjeuner';
@@ -116,7 +116,6 @@ export class Planning implements OnInit {
     return w.slots.find(s => s.date.startsWith(iso) && s.type === type) ?? null;
   }
 
-  // --- Deck navigation
   prevCard() {
     this.activeIndex.set(Math.max(0, this.activeIndex() - 1));
   }
@@ -125,9 +124,7 @@ export class Planning implements OnInit {
     this.activeIndex.set(Math.min(6, this.activeIndex() + 1));
   }
 
-  // --- Pointer drag: finger left => next day
   onPointerDown(e: PointerEvent) {
-    // ✅ si on clique sur un bouton / élément cliquable, pas de drag
     const target = e.target as HTMLElement;
     if (target.closest('button, a, select, input, textarea, .recipe-chip')) return;
 
@@ -146,19 +143,24 @@ export class Planning implements OnInit {
   }
 
   onPointerUp() {
-    if (!this.dragging) return;
 
-    const dx = this.dragX();
-    const threshold = 60;
+  if (!this.dragging) return;
 
-    if (dx <= -threshold) this.nextCard(); // doigt vers la gauche => jour suivant
-    else if (dx >= threshold) this.prevCard(); // doigt vers la droite => jour précédent
+  const dx = this.dragX();
+  const threshold = 60;
 
-    this.dragging = false;
-    this.dragX.set(0);
+  if (dx <= -threshold) {
+    this.nextCard();
+  } else if (dx >= threshold) {
+    this.prevCard();
   }
 
-  // clicking a non-active card selects it; active card itself doesn't open anything now
+
+  this.dragging = false;
+  this.dragX.set(0);
+}
+
+
   onCardClick(i: number) {
     if (this.didDrag) return;
     if (i !== this.activeIndex()) this.activeIndex.set(i);
@@ -188,7 +190,6 @@ export class Planning implements OnInit {
     } as const;
   }
 
-  // --- Add / Modify menu
   openAddMenu(day: Date, type: SlotType) {
     this.addMenuDay.set(day);
     this.addMenuType.set(type);
@@ -206,9 +207,14 @@ export class Planning implements OnInit {
     const type = this.addMenuType();
     if (!day || !type) return;
 
-    // TODO: route réelle
-    // this.router.navigate(['/recipes/search'], { queryParams: { day: toIsoDate(day), type } });
-    this.router.navigate(['/recipes/search']);
+    this.router.navigate(['/recipe/search'], {
+      queryParams: {
+        day: toIsoDate(day),
+        type: type,
+        weekStart: toIsoDate(this.selectedWeekStart()),
+        from: 'planning'
+      }
+    });
     this.closeAddMenu();
   }
 
@@ -217,26 +223,26 @@ export class Planning implements OnInit {
     const type = this.addMenuType();
     if (!day || !type) return;
 
-    // TODO: route réelle
-    // this.router.navigate(['/recipes/favorites'], { queryParams: { day: toIsoDate(day), type } });
-    this.router.navigate(['/recipes/favorites']);
+    this.router.navigate(['/recipe/favorite'], {
+      queryParams: {
+        day: toIsoDate(day),
+        type: type,
+        weekStart: toIsoDate(this.selectedWeekStart()),
+        from: 'planning'
+      }
+    });
     this.closeAddMenu();
   }
 
-  // --- Recipe detail navigation (placeholder)
   openRecipe(recipeId: string) {
-    // TODO: route réelle + fetch details
-    this.router.navigate(['/recipes', recipeId]);
+    this.router.navigate(['/recipe', recipeId]);
   }
 
   removeSlot(slotId: string) {
     const w = this.weekData();
     if (!w) return;
 
-    // optimistic
     this.weekData.set({ ...w, slots: w.slots.filter(s => s.slotId !== slotId) });
-
-    // TODO: call API delete
   }
 
   private loadWeek(weekStart: Date) {
@@ -263,4 +269,11 @@ export class Planning implements OnInit {
 
 function toDayStart(d: Date) {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+}
+
+function parseIsoDate(iso: string): Date | null {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+  if (!m) return null;
+  const y = Number(m[1]), mo = Number(m[2]), d = Number(m[3]);
+  return new Date(y, mo - 1, d);
 }

@@ -1,1 +1,34 @@
-<p>recipe-search works!</p>
+<div class="page-shell">
+  <section class="card card--wide">
+    <div class="head">
+      <div class="title">Rechercher une recette</div>
+      @if (planningMode) {
+        <div class="sub">Ajout au planning • {{ targetDay }} • slot {{ targetType }}</div>
+      }
+    </div>
+
+    <div class="searchbar">
+      <input class="input" [(ngModel)]="q" placeholder="Rechercher…" (ngModelChange)="q.set($event); search()" />
+    </div>
+
+    @if (loading()) { <div class="state">Chargement…</div> }
+    @if (error()) { <div class="state error">{{ error() }}</div> }
+
+    <div class="list">
+      @for (r of results(); track r.id) {
+        <div class="row">
+          <button class="row-main" type="button" (click)="openRecipe(r.id)">
+            <div class="r-title">{{ r.title }}</div>
+            <div class="r-meta">
+              Prep: {{ r.prepTime }}m • Cook: {{ r.cookTime }}m
+            </div>
+          </button>
+
+          @if (planningMode) {
+            <button class="btn" type="button" (click)="$event.stopPropagation(); addToPlanning(r.id)">Ajouter</button>
+          }
+        </div>
+      }
+    </div>
+  </section>
+</div>

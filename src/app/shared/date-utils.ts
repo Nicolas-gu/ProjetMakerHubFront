@@ -9,8 +9,8 @@ export function toIsoDate(d: Date): string {
 export function weekStartMonday(date: Date): Date {
   const d = new Date(date);
   d.setHours(0,0,0,0);
-  const day = d.getDay(); // 0=dim, 1=lun...
-  const diff = (day === 0 ? -6 : 1) - day; // ramène à lundi
+  const day = d.getDay();
+  const diff = (day === 0 ? -6 : 1) - day;
   d.setDate(d.getDate() + diff);
   return d;
 }

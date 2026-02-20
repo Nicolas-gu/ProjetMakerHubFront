@@ -8,11 +8,12 @@
     @if(isLoggedIn()){
         <button matButton [matMenuTriggerFor]="menu" class="btn btn-square nav-button"><mat-icon>menu</mat-icon></button>
             <mat-menu #menu="matMenu">
-                <button mat-menu-item class="btn full-width" routerLink="pantry-item"><mat-icon>local_pizza</mat-icon>Ingrédients à la maison</button>
-                <button mat-menu-item class="btn full-width" routerLink="ingredient-list"><mat-icon>local_pizza</mat-icon>Voir tous les ingrédients</button>
-                <button mat-menu-item class="btn full-width" routerLink="favorite" ><mat-icon>star</mat-icon>Recettes favorites</button>
-                <button mat-menu-item class="btn full-width" routerLink="planning" ><mat-icon>local_library</mat-icon>Mon planning</button>
-                <button mat-menu-item class="btn full-width" (click)="logout()"><mat-icon>logout</mat-icon>Déconnexion</button>
+                <button mat-menu-item class="btn full-width" (click)="goShoppingList()">Liste de courses</button>
+                <button mat-menu-item class="btn full-width" routerLink="recipe/favorite" >Recettes favorites</button>
+                <button mat-menu-item class="btn full-width" routerLink="pantry-item">Ingrédients à la maison</button>
+                <button mat-menu-item class="btn full-width" routerLink="ingredient-list">Voir tous les ingrédients</button>
+                <button mat-menu-item class="btn full-width" routerLink="">Mon compte</button>
+                <button mat-menu-item class="btn full-width" (click)="logout()">Déconnexion</button>
             </mat-menu>
     }
 </div>

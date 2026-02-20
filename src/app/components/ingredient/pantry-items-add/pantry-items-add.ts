@@ -10,11 +10,4 @@ import { Router, RouterLink } from '@angular/router';
 })
 export class PantryItemsAdd {
 
-  constructor(private router: Router) {}
-
-  GoBack(){
-    console.log("ok?")
-    this.router.navigateByUrl("/pantry-item")
-  }
-
 }

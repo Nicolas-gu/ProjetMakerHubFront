@@ -1,10 +1,9 @@
 <section class="planning-root">
-  <!-- Header -->
   <header class="planning-header">
     <div class="title">Planning</div>
 
     <button class="week-pill" type="button" (click)="openWeekPicker()">
-      {{ weekOptions?.length ? ('Semaine du ' + (selectedWeekStart() | date:'shortDate')) : 'Choisir semaine' }}
+      {{ weekOptions!.length ? ('Semaine du ' + (selectedWeekStart() | date:'dd/MM/yy')) : 'Choisir semaine' }}
       <span class="chev">▾</span>
     </button>
   </header>
@@ -12,7 +11,6 @@
   @if (loading()) { <div class="state">Chargement…</div> }
   @if (error) { <div class="state error">{{ error }}</div> }
 
-  <!-- Deck / Carousel -->
   <div class="deck"
        (pointerdown)="onPointerDown($event)"
        (pointermove)="onPointerMove($event)"
@@ -20,7 +18,7 @@
        (pointercancel)="onPointerUp()">
 
     <div class="cards">
-      @for (d of weekDays(); track $index; let i = $index) {
+      @for (d of weekDays(); track d; let i = $index) {
         <article class="day-card"
                  [class.active]="i === activeIndex()"
                  [ngStyle]="cardStyle(i)"
@@ -28,10 +26,8 @@
 
           <div class="day-card__head">
             <div class="day-card__date">{{ d | date:'EEEE d MMM' }}</div>
-            <div class="day-card__sub" *ngIf="i === activeIndex()">Glisse ←/→ pour changer de jour</div>
           </div>
 
-          <!-- Slots -->
           <div class="slots">
             @for (t of slotTypes; track t) {
               <div class="slot-row">
@@ -42,7 +38,7 @@
                     <button class="recipe-chip" type="button" (click)="openRecipe(s.recipeId)">
                       <div class="recipe-title">{{ s.recipeTitle }}</div>
                       <div class="recipe-meta">
-                        {{ s.portion }} p • Prep {{ s.prepTime }}m • Cook {{ s.cookTime }}m
+                        {{ s.portion }} p • Prep. {{ s.prepTime }}m • Cuis. {{ s.cookTime }}m
                       </div>
                     </button>
                   } @else {
@@ -68,7 +64,6 @@
       }
     </div>
 
-    <!-- Dots position -->
     <div class="dots">
       @for (_ of weekDays(); track $index; let i = $index) {
         <span class="dot" [class.active]="i === activeIndex()"></span>
@@ -76,7 +71,6 @@
     </div>
   </div>
 
-  <!-- Simple Add/Modify menu (overlay panel) -->
   <div class="menu-layer" [class.open]="addMenuOpen()">
     <div class="scrim" (click)="closeAddMenu()"></div>
 
@@ -88,7 +82,6 @@
     </div>
   </div>
 
-  <!-- Week picker (drag up/down simple) -->
   <div class="week-layer" [class.open]="weekPickerOpen()">
     <div class="scrim" (click)="closeWeekPicker()"></div>
 

@@ -69,7 +69,6 @@
 }
 .state.error{ color: #ff8f8f; }
 
-/* Deck */
 .deck{
   flex: 1 1 auto;
   min-height: 0;
@@ -94,7 +93,6 @@
   padding: 16px;
   cursor: pointer;
 
-  /* look compatible avec ton glass */
   background: rgba(6, 27, 18, 0.35);
   border: 1px solid rgba(0, 230, 168, 0.18);
   backdrop-filter: blur(10px);
@@ -187,7 +185,6 @@
   align-items: center;
 }
 
-/* nav buttons */
 .deck-nav{
   position: absolute;
   top: 12px;
@@ -197,7 +194,6 @@
 }
 
 @media (pointer: fine){
-  /* sur desktop (souris), on les montre au survol du deck */
   .deck:hover .deck-nav{
     opacity: 0.9;
     pointer-events: auto;
@@ -206,7 +202,6 @@
 .deck-nav.left{ left: 12px; }
 .deck-nav.right{ right: 12px; }
 
-/* Expand overlay */
 .expand-layer{
   position: absolute;
   inset: 0;
@@ -333,7 +328,7 @@
 }
 
 .add-menu .btn{
-  height: 40px; /* un peu plus compact */
+  height: 40px;
   padding: 0 14px;
 }
 

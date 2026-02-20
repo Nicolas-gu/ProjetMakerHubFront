@@ -1,13 +1,23 @@
 <div class="home-page">
   <div class="page">
     <section class="card planning">
-      <app-planning></app-planning>
+      <app-planning (weekStartChange)="currentWeekStart = $event"></app-planning>
     </section>
 
     <section class="actions">
-      <button class="btn full-width">Chercher recette</button>
-      <button class="btn full-width">Proposer recette</button>
-      <button class="btn full-width">Recette</button>
+      <button class="btn full-width" type="button" (click)="goToRecipeAdd()">
+        Ajouter une nouvelle recette
+      </button>
+
+      <button class="btn full-width" type="button" (click)="goToPantry()">
+        Stock maison (Pantry)
+      </button>
+
+      <button class="btn full-width" type="button" (click)="generateShoppingList()" [disabled]="generating">
+        {{ generating ? 'Génération…' : 'Générer la liste de courses' }}
+      </button>
     </section>
+
+
   </div>
 </div>

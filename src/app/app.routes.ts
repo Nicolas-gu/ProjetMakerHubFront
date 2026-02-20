@@ -19,19 +19,22 @@ export const routes: Routes = [
     { path: "recipe/search", 
         loadComponent: () => import("./components/recipe/recipe-search/recipe-search").then(r => r.RecipeSearch), canActivate: [authGuard]
     },
-    { path: "recipe/:id", 
-        loadComponent: () => import("./components/recipe/recipe-detail/recipe-detail").then(r => r.RecipeDetail), canActivate: [authGuard]
-    },
     { path: "recipe/add", 
         loadComponent: () => import("./components/recipe/recipe-add/recipe-add").then(r => r.RecipeAdd), canActivate: [authGuard]
+    },
+    { path: "recipe/:recipeId", 
+        loadComponent: () => import("./components/recipe/recipe-detail/recipe-detail").then(r => r.RecipeDetail), canActivate: [authGuard]
     },
     { path: "ingredient-list", 
         loadComponent: () => import("./components/ingredient/ingredient-list/ingredient-list").then(r => r.IngredientList), canActivate: [authGuard]
     },
-    { path: "pantry-item", 
+    { path: "shopping-list", 
+        loadComponent: () => import("./components/shopping-list/shopping-list").then(r => r.ShoppingList), canActivate: [authGuard]
+    },
+    { path: "pantry", 
         loadComponent: () => import("./components/ingredient/pantry-items/pantry-items").then(r => r.PantryItems), canActivate: [authGuard]
     },
-    { path: "pantry-item/add", 
+    { path: "pantry/add", 
         loadComponent: () => import("./components/ingredient/pantry-items-add/pantry-items-add").then(r => r.PantryItemsAdd), canActivate: [authGuard]
     },
     { path: "", redirectTo: 'home', pathMatch: 'full' },
