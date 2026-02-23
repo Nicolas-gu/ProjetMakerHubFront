@@ -8,6 +8,8 @@ import { ShoppingListDto, ShoppingListItemCreateDto, ShoppingListItemUpdateDto }
   providedIn: 'root',
 })
 export class ShoppingListService {
+
+  // Dépendances
   private http = inject(HttpClient);
   private api = environment.apiBaseUrl;
 

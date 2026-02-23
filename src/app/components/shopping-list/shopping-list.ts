@@ -3,19 +3,21 @@ import { ActivatedRoute } from '@angular/router';
 import { ShoppingListService } from '../../core/services/shopping-list-service';
 import { ShoppingListDto } from '../../interfaces/shopping-list.models';
 import { formatQuantity } from '../../shared/unit-utils';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { toIsoDate, weekStartMonday } from '../../shared/date-utils';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-shopping-list',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatIconModule],
   templateUrl: './shopping-list.html',
   styleUrl: './shopping-list.css',
 })
 export class ShoppingList implements OnInit{
   private route = inject(ActivatedRoute);
   private shoppingListService = inject(ShoppingListService);
+  private location = inject(Location);
 
   formatQuantity = formatQuantity;
 
@@ -99,5 +101,9 @@ export class ShoppingList implements OnInit{
         this.load;
       }
     });
+  }
+
+  goBack() {
+    this.location.back();
   }
 }

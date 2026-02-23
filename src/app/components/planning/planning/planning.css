@@ -93,13 +93,46 @@
   padding: 16px;
   cursor: pointer;
 
-  background: rgba(6, 27, 18, 0.35);
-  border: 1px solid rgba(0, 230, 168, 0.18);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 18px 50px rgba(0,0,0,0.45);
+  /* ✅ moins transparent + un peu de structure */
+  background:
+    linear-gradient(180deg, rgba(10, 22, 18, 0.92) 0%, rgba(6, 12, 10, 0.88) 100%);
+  border: 2px solid rgba(0, 230, 168, 0.22);
 
-  transition: transform 220ms ease, opacity 220ms ease;
+  /* ✅ moins glass */
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  /* ✅ bord plus “marqué” + léger glow turquoise */
+  box-shadow:
+    0 18px 50px rgba(0,0,0,0.50),
+    0 0 0 1px rgba(0, 230, 168, 0.14) inset,
+    0 0 28px rgba(0, 230, 168, 0.10);
+
+  transition: transform 220ms ease, opacity 220ms ease, filter 220ms ease;
+}
+
+.day-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius: 20px;
+  pointer-events:none;
+
+  /* ✅ highlight plus “premium”, moins vert, un peu cyan */
+  background:
+    radial-gradient(circle at 20% 15%, rgba(60, 210, 220, 0.14), transparent 55%),
+    radial-gradient(circle at 80% 85%, rgba(0, 230, 168, 0.10), transparent 58%);
+  opacity: 0.95;
+}
+
+.day-card.active{
+  cursor: default;
+  filter: brightness(1.03);
+  border-color: rgba(0, 230, 168, 0.35);
+  box-shadow:
+    0 22px 60px rgba(0,0,0,0.56),
+    0 0 0 1px rgba(0, 230, 168, 0.20) inset,
+    0 0 40px rgba(0, 230, 168, 0.14);
 }
 
 .day-card.active{ cursor: default; }
@@ -138,14 +171,24 @@
 
   padding: 12px;
   border-radius: 14px;
-  background: rgba(0,0,0,0.22);
-  border: 1px solid rgba(0, 230, 168, 0.10);
+
+  background: rgba(0,0,0,0.20);
+  border: 2px solid rgba(0, 230, 168, 0.16);
+
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.04) inset,
+    0 10px 22px rgba(0,0,0,0.18);
 }
 
 .slot-label{
   font-weight: 900;
   opacity: 0.9;
   font-size: 13px;
+}
+
+.day-card.active .slot-row:hover{
+  border-color: rgba(0, 230, 168, 0.28);
+  filter: brightness(1.03);
 }
 
 .empty{
@@ -271,62 +314,6 @@
   background: rgba(234, 246, 239, 0.85);
 }
 
-.slots{
-  display: grid;
-  gap: 10px;
-}
-
-.slot-row{
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 10px;
-  align-items: center;
-
-  padding: 12px;
-  border-radius: 14px;
-  background: rgba(0,0,0,0.22);
-  border: 1px solid rgba(0, 230, 168, 0.10);
-}
-
-.slot-label{
-  font-weight: 900;
-  opacity: 0.9;
-  font-size: 13px;
-}
-
-.empty{
-  opacity: 0.65;
-  font-size: 13px;
-  margin-top: 4px;
-}
-
-.recipe-chip{
-  width: 100%;
-  text-align: left;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  padding: 6px 0;
-  cursor: pointer;
-}
-
-.recipe-title{
-  font-weight: 900;
-  font-size: 14px;
-}
-
-.recipe-meta{
-  font-size: 12px;
-  opacity: 0.75;
-  margin-top: 2px;
-}
-
-.slot-actions{
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
 .add-menu .btn{
   height: 40px;
   padding: 0 14px;
@@ -445,3 +432,21 @@
   filter: brightness(1.08);
 }
 
+.btn-square {
+  border-radius: 12px;
+  height: 40px;
+  width: 40px;            /* 🔥 important pour carré parfait */
+  padding: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slot-actions{
+  display: flex;
+  flex-direction: column;   /* 🔥 empilé */
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+}

@@ -1,4 +1,5 @@
-import { Unit } from "../interfaces/shopping-list.models";
+import { Unit } from "../interfaces/units.models";
+
 
 export function unitLabel(u: Unit): string {
   switch (u) {

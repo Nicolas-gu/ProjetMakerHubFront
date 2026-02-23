@@ -3,14 +3,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SlotType } from '../../../interfaces/Planning.models';
 import { parseSlotType } from '../../../shared/slot-type-utils';
 import { PlanningService } from '../../../core/services/planning-service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { RecipeService } from '../../../core/services/recipe-service';
 import { RecipeSearchResponseDto } from '../../../interfaces/recipe.models';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-favorite',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatIconModule],
   templateUrl: './favorite.html',
   styleUrl: './favorite.css',
 })
@@ -19,6 +20,7 @@ export class Favorite implements OnInit {
   private route = inject(ActivatedRoute);
   private planningService = inject(PlanningService);
   private recipeService = inject(RecipeService);
+  private location = inject(Location)
 
   planningMode = false;
   targetDay: string | null = null;
@@ -37,10 +39,7 @@ export class Favorite implements OnInit {
     this.targetDay = qp.get('day');
     this.targetWeekStart = qp.get('weekStart');
     this.targetType = parseSlotType(qp.get('type'));
-    console.log('planningMode', this.planningMode);
-    console.log('day', this.targetDay, 'weekStart', this.targetWeekStart, 'type', this.targetType);
-    console.log('all queryParams', this.route.snapshot.queryParamMap.keys.map(k => [k, this.route.snapshot.queryParamMap.get(k)]));
-
+   
     this.load();
   }
 
@@ -61,7 +60,18 @@ export class Favorite implements OnInit {
   }
 
   openRecipe(id: string) {
-    this.router.navigate(['/recipe', id]);
+    if (this.planningMode) {
+      this.router.navigate(['/recipe', id], {
+        queryParams: {
+          from: 'planning',
+          day: this.targetDay,
+          type: this.targetType,          
+          weekStart: this.targetWeekStart
+        }
+      });
+    } else {
+      this.router.navigate(['/recipe', id]);
+    }
   }
 
   addToPlanning(recipeId: string) {
@@ -81,8 +91,12 @@ export class Favorite implements OnInit {
       portion: this.defaultPortion,
     }).subscribe({
       next: () => {
-        this.router.navigate(['/home'], { queryParams: { weekStart } });
+        this.router.navigate(['/home'], { queryParams: { weekStart, day } });
       }
     });
+  }
+
+  goBack() {
+    this.location.back();
   }
 }

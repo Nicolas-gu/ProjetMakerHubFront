@@ -25,17 +25,14 @@ export const routes: Routes = [
     { path: "recipe/:recipeId", 
         loadComponent: () => import("./components/recipe/recipe-detail/recipe-detail").then(r => r.RecipeDetail), canActivate: [authGuard]
     },
-    { path: "ingredient-list", 
-        loadComponent: () => import("./components/ingredient/ingredient-list/ingredient-list").then(r => r.IngredientList), canActivate: [authGuard]
+    { path: "recipe/:recipeId/edit",
+        loadComponent: () => import("./components/recipe/recipe-edit/recipe-edit").then(r => r.RecipeEdit), canActivate: [authGuard]
     },
     { path: "shopping-list", 
         loadComponent: () => import("./components/shopping-list/shopping-list").then(r => r.ShoppingList), canActivate: [authGuard]
     },
     { path: "pantry", 
-        loadComponent: () => import("./components/ingredient/pantry-items/pantry-items").then(r => r.PantryItems), canActivate: [authGuard]
-    },
-    { path: "pantry/add", 
-        loadComponent: () => import("./components/ingredient/pantry-items-add/pantry-items-add").then(r => r.PantryItemsAdd), canActivate: [authGuard]
+        loadComponent: () => import("./components/pantry/pantry").then(r => r.Pantry), canActivate: [authGuard]
     },
     { path: "", redirectTo: 'home', pathMatch: 'full' },
 ];

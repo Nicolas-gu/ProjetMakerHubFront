@@ -2,11 +2,15 @@ import { inject } from "@angular/core";
 import { CanActivateFn, Router } from "@angular/router";
 import { TokenService } from "../services/token-service";
 
+// S'execute si navigation vers une route protégée canActivate: [authGuard]
 export const authGuard: CanActivateFn = () => {
-    const _tokenService = inject(TokenService);
-    const _router = inject(Router);
 
-    if(_tokenService.isLoggedIn()) return true;
+    // Dépendances
+    const tokenService = inject(TokenService);
+    const router = inject(Router);
 
-    return _router.createUrlTree(['/login'])
+    // SI connecté => true
+    if (tokenService.isLoggedIn()) return true;
+    // Sinon redirige /login
+    return router.createUrlTree(['/login'])
 }

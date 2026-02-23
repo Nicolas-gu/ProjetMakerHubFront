@@ -42,7 +42,7 @@ export class Home {
   }
 
   goToRecipeAdd() {
-    this.router.navigate(['/recipes/add']);
+    this.router.navigate(['/recipe/add']);
   }
 
   goToPantry() {

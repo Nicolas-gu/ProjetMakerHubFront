@@ -3,15 +3,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SlotType } from '../../../interfaces/Planning.models';
 import { parseSlotType } from '../../../shared/slot-type-utils';
 import { PlanningService } from '../../../core/services/planning-service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RecipeService } from '../../../core/services/recipe-service';
 import { RecipeSearchResponseDto } from '../../../interfaces/recipe.models';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-recipe-search',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatIconModule],
   templateUrl: './recipe-search.html',
   styleUrl: './recipe-search.css',
 })
@@ -20,6 +21,7 @@ export class RecipeSearch implements OnInit {
   private route = inject(ActivatedRoute);
   private planningService = inject(PlanningService);
   private recipeService = inject(RecipeService);
+  private location = inject(Location)
 
   planningMode = false;
   targetDay: string | null = null;
@@ -64,7 +66,18 @@ export class RecipeSearch implements OnInit {
   }
 
   openRecipe(id: string) {
-    this.router.navigate(['/recipe', id]);
+    if (this.planningMode) {
+      this.router.navigate(['/recipe', id], {
+        queryParams: {
+          from: 'planning',
+          day: this.targetDay,
+          type: this.targetType,          // SlotType (1|2|3)
+          weekStart: this.targetWeekStart // attention au nom
+        }
+      });
+    } else {
+      this.router.navigate(['/recipe', id]);
+    }
   }
 
   addToPlanning(recipeId: string) {
@@ -83,8 +96,12 @@ export class RecipeSearch implements OnInit {
       portion: this.defaultPortion,
     }).subscribe({
       next: () => {
-        this.router.navigate(['/home'], { queryParams: { weekStart } });
+        this.router.navigate(['/home'], { queryParams: { weekStart, day } });
       }
     });
+  }
+
+  goBack() {
+    this.location.back();
   }
 }

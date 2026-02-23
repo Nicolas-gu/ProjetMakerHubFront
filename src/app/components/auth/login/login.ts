@@ -6,7 +6,6 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth-service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { TokenService } from '../../../core/services/token-service';
 import { finalize } from 'rxjs';
 
 @Component({
@@ -16,53 +15,58 @@ import { finalize } from 'rxjs';
   styleUrl: './login.css',
 })
 export class Login {
-  private _fb = inject(FormBuilder);
-  private _authService = inject(AuthService);
-  private _router = inject(Router);
-  private _tokenService = inject(TokenService);
-  private _cdr = inject(ChangeDetectorRef)
 
+  // Dépendances
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef)
+
+  // Change l'état du bouton submit
   loading = false;
+
   errorMessage = '';
 
-  loginForm = this._fb.nonNullable.group({
+  // Création formulaire
+  loginForm = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]]
   });
 
+  // Logique formulaire
   onSubmit(): void {
     if (this.loginForm.invalid || this.loading){
       this.loginForm.markAllAsTouched();
       return;
     } 
-    console.log(this.loginForm.value);
 
     this.errorMessage = '';
     this.loading = true;
+
+    // Récup valeur formulaire = LoginRequestDto
     const dto = this.loginForm.getRawValue();
 
-    this._authService.login(dto).pipe(
+    this.authService.login(dto).pipe(
       finalize(() => {
+        // Reset toujours loading
         this.loading = false;
-        this._cdr.markForCheck();
+        this.cdr.markForCheck();
       })
     ).subscribe({
-      next: (res) => {
-
-        this._tokenService.set(res.token);
-        this._cdr.markForCheck();
-        this._router.navigateByUrl('/');
+      next: () => {
+        this.cdr.markForCheck();
+        this.router.navigateByUrl('/');
       },
       error: (err) => {
         if (err.status === 401) {
           this.errorMessage = 'Email ou mot de passe incorrect';
-        } else if (err.status === 0) {
-          this.errorMessage = "Impossible de contacter l'API (CORS / URL / serveur)";
-        } else {
-          this.errorMessage = `Erreur serveur (${err.status})`;
         }
         this.loginForm.markAllAsTouched();
-        this._cdr.markForCheck();
+        this.cdr.markForCheck();
       }})
+  }
+
+  goRegister() {
+    this.router.navigate(['/new-account']);
   }
 }

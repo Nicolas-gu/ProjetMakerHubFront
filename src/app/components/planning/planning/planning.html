@@ -1,6 +1,6 @@
 <section class="planning-root">
   <header class="planning-header">
-    <div class="title">Planning</div>
+    <h2 class="title">Planning</h2>
 
     <button class="week-pill" type="button" (click)="openWeekPicker()">
       {{ weekOptions!.length ? ('Semaine du ' + (selectedWeekStart() | date:'dd/MM/yy')) : 'Choisir semaine' }}
@@ -49,10 +49,33 @@
                 <div class="slot-actions">
                   @if (i === activeIndex()) {
                     @if (slotFor(d, t); as s) {
-                      <button class="btn btn-square" type="button" title="Supprimer" (click)="removeSlot(s.slotId)">🗑</button>
-                      <button class="btn" type="button" (click)="openAddMenu(d, t)">Modifier</button>
+
+                      <button
+                        class="btn btn-square danger"
+                        type="button"
+                        title="Supprimer"
+                        (click)="$event.stopPropagation(); removeSlot(s.slotId)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+
+                      <button
+                        class="btn btn-square"
+                        type="button"
+                        title="Modifier"
+                        (click)="$event.stopPropagation(); openAddMenu(d, t)">
+                        <mat-icon>edit</mat-icon>
+                      </button>
+
                     } @else {
-                      <button class="btn" type="button" (click)="openAddMenu(d, t)">Ajouter</button>
+
+                      <button
+                        class="btn btn-square"
+                        type="button"
+                        title="Ajouter"
+                        (click)="$event.stopPropagation(); openAddMenu(d, t)">
+                        <mat-icon>add</mat-icon>
+                      </button>
+
                     }
                   }
                 </div>

@@ -5,11 +5,12 @@ import { ActivatedRoute, Route, Router } from '@angular/router';
 
 import { PlanningService } from '../../../core/services/planning-service';
 import { PlanWeekDto, SlotType } from '../../../interfaces/Planning.models';
-import { addDays, toIsoDate, weekStartMonday } from '../../../shared/date-utils';
+import { addDays, toDayStart, toIsoDate, weekStartMonday } from '../../../shared/date-utils';
+import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-planning',
   standalone: true,
-  imports: [CommonModule, FormsModule ],
+  imports: [CommonModule, FormsModule, MatIconModule ],
   templateUrl: './planning.html',
   styleUrl: './planning.css',
 })
@@ -58,14 +59,17 @@ export class Planning implements OnInit {
   ngOnInit(): void {
     const today = new Date();
     this.buildWeekOptions(today);
+    
+    const qsWeek = this.route.snapshot.queryParamMap.get('weekStart');  // recup les params ds l'url
+    const qsDay = this.route.snapshot.queryParamMap.get('day');
+    
+    const weekBase = qsWeek ? parseIsoDate(qsWeek) : null;   // convertit les params en Date | null
+    const dayBase = qsDay ? parseIsoDate(qsDay) : null;
 
-    const qs = this.route.snapshot.queryParamMap.get('weekStart');
-    const mondayFromUrl = qs ? parseIsoDate(qs) : null;
-
-    const monday = weekStartMonday(today);
+    const monday = weekStartMonday(weekBase ?? dayBase ?? today);
     this.selectedWeekStart.set(monday);
 
-    const refDay = mondayFromUrl ?? today;
+    const refDay = dayBase ?? today;
     const idx = Math.max(
       0,
       Math.min(6, Math.floor((toDayStart(refDay).getTime() - toDayStart(monday).getTime()) / 86400000))
@@ -239,15 +243,20 @@ export class Planning implements OnInit {
   }
 
   removeSlot(slotId: string) {
-    const w = this.weekData();
-    if (!w) return;
-
-    this.weekData.set({ ...w, slots: w.slots.filter(s => s.slotId !== slotId) });
-  }
-
-  private loadWeek(weekStart: Date) {
+  this.planningService.deleteSlot(slotId).subscribe({
+    next: () => {
+      this.loadWeek(this.selectedWeekStart(), true)
+    },
+    error: () => {
+      //TODO toast
+      this.loadWeek(this.selectedWeekStart(), true)
+    },
+  });
+}
+  // reload le planning
+  private loadWeek(weekStart: Date, force = false) {
     const iso = toIsoDate(weekStart);
-    if (this.lastLoadedWeekIso === iso) return;
+    if (!force && this.lastLoadedWeekIso === iso) return; // pas de reload si mm week sauf si force = true
 
     this.lastLoadedWeekIso = iso;
     this.loading.set(true);
@@ -267,9 +276,7 @@ export class Planning implements OnInit {
   }
 }
 
-function toDayStart(d: Date) {
-  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
-}
+
 
 function parseIsoDate(iso: string): Date | null {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);

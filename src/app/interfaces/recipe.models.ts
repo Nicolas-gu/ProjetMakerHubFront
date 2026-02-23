@@ -16,3 +16,24 @@ export interface RecipeSearchRequestDto {
   page?: number;
   pageSize?: number;
 }
+
+export interface RecipeDetailResponseDto {
+  title: string;
+  description: string;
+  basePortion: number;
+  prepTime: number;
+  cookTime: number;
+  isPublic: boolean;
+  isFavorite: boolean;
+  steps: string[];
+  tags: string[];
+  ingredients: IngredientDetailDto[];
+  imageUrl?: string | null;
+}
+
+export interface IngredientDetailDto {
+  name: string;
+  quantity?: number | null;
+  quantityText?: string | null;
+  unit: number;
+}

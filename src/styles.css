@@ -1,8 +1,9 @@
 
 :root {
-  --color-bg-main: #04130C;        /* fond principal */
-  --color-bg-surface: #061B12;     /* surfaces */
-  --color-bg-card: #072418;        /* carte / conteneur */
+  --color-bg-main: #153b24;        /* fond principal */
+  --color-bg-surface: #08130c;     /* surfaces */
+  --color-bg-card: #000000;        /* carte / conteneur */
+
   --color-bg-divider: #0B3A24;     /* séparateurs */
   --border-strong: rgba(0, 230, 168, 0.45);
 
@@ -19,6 +20,14 @@
   --color-success: #2FBF6B;
   --color-warning: #F59E0B;
   --color-error: #f51f1f;
+
+
+
+  --accent-cyan: rgba(60, 210, 220, 0.85);
+  --accent-cyan-soft: rgba(60, 210, 220, 0.18);
+
+  --border-soft: rgba(234, 246, 239, 0.10);
+  --border-mid: rgba(234, 246, 239, 0.18);
 }
 
 *{
@@ -28,6 +37,7 @@
 }
 
 body{
+  overflow: hidden;
   background:
   radial-gradient(
     circle at 20% 10%,
@@ -58,24 +68,25 @@ app-root{
  /* Style des boutons */
 .btn {
   height: 46px;
-  border-radius: 999px; /* 🔥 pill parfait même en full-width */
-  border: 1px solid rgba(0, 230, 168, 0.35);
+  border-radius: 999px;
+  border: 1px solid rgba(60, 210, 220, 0.35);
   cursor: pointer;
 
   font-weight: 700;
   letter-spacing: 0.5px;
   color: var(--color-text-primary);
 
+  /* ✅ vert/bleu plus doux */
   background: linear-gradient(
     180deg,
-    #7be06f 0%,
-    #4fbc69 45%,
-    #2f9f63 100%
+    #3fbf78 0%,   /* vert doux, moins flashy */
+    #249a63 45%,  /* vert plus profond */
+    #16704b 100%  /* vert foncé */
   );
 
   box-shadow:
     0 6px 14px rgba(0, 0, 0, 0.35),
-    0 2px 0 rgba(255, 255, 255, 0.18) inset,
+    0 2px 0 rgba(255, 255, 255, 0.16) inset,
     0 -2px 6px rgba(0, 0, 0, 0.25) inset;
 
   transition:
@@ -114,6 +125,35 @@ app-root{
   padding: 0;
 }
 
+.icon-btn{
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid rgba(234, 246, 239, 0.14);
+  background: rgba(0,0,0,0.20);
+  color: var(--color-text-primary);
+  cursor: pointer;
+
+  display: inline-grid;
+  place-items: center;
+
+  box-shadow:
+    0 10px 18px rgba(0,0,0,0.22),
+    0 1px 0 rgba(255,255,255,0.06) inset;
+
+  transition: transform 120ms ease, filter 120ms ease, border-color 120ms ease;
+}
+
+.icon-btn:hover{ filter: brightness(1.08); border-color: rgba(60, 210, 220, 0.22); }
+.icon-btn:active{ transform: translateY(1px); }
+
+.icon-btn.danger{
+  border-color: rgba(245, 31, 31, 0.25);
+}
+.icon-btn.danger:hover{
+  border-color: rgba(245, 31, 31, 0.45);
+}
+
 /* Styles des card */
 .card {
   width: 100%;
@@ -122,7 +162,8 @@ app-root{
   padding: clamp(18px, 3vw, 28px);
   position: relative;
   overflow: hidden;
-
+  
+  color: var(--color-text-primary);
   background: linear-gradient(165deg, #357f27 0%, #033013 55%, #073b37 100%);
 
   backdrop-filter: blur(12px);
@@ -170,10 +211,150 @@ app-root{
   letter-spacing: 0.5px;
 }
 
-.page-shell{
-  padding: 20px 16px;
-  padding-top: calc(20px + 60px + env(safe-area-inset-top));
-  padding-bottom: calc(20px + env(safe-area-inset-bottom));
-  min-height: 100svh;
-  box-sizing: border-box;
+/* Page layout: card fixe + contenu scroll à l’intérieur */
+.page-shell {
+  /* hauteur visible en tenant compte navbar + encoches */
+  min-height: 100dvh;
+  padding:
+    calc(16px + env(safe-area-inset-top))
+    16px
+    calc(16px + env(safe-area-inset-bottom))
+    16px;
+
+  /* si ta navbar est overlay (60px), on la compense ici */
+  padding-top: calc(16px + 60px + env(safe-area-inset-top));
+
+  display: grid;
+  justify-items: center;
+}
+
+/* card “page” : hauteur fixe, scroll interne */
+.page-shell > .card {
+  width: 100%;
+  max-width: 900px;     /* desktop */
+  height: 100%;
+  max-height: calc(
+    100dvh
+    - (16px + 60px + env(safe-area-inset-top))
+    - (16px + env(safe-area-inset-bottom))
+  );
+
+  /* très important: permet au scroll interne de fonctionner */
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* zone scrollable à l’intérieur de la card */
+.card-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.material-symbols-rounded {
+  font-size: 20px;
+  line-height: 1;
+  color: #ffffff;
+  user-select: none;
+}
+
+.btn mat-icon{
+  color: var(--color-text-primary);
+  font-size: 22px;     /* 🔥 augmente */
+  width: 22px;
+  height: 22px;
+  line-height: 22px;
+}
+
+.btn-square{
+  width: 40px;
+  height: 40px;
+  padding: 0 !important;        /* 🔥 anti-override */
+  border-radius: 12px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.btn-square mat-icon{
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+}
+
+/* ===== MealForge Menu Panel ===== */
+
+.mf-menu.mat-mdc-menu-panel {
+  background: rgba(10, 18, 16, 0.96) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  border-radius: 16px;
+  border: 1px solid rgba(0, 230, 168, 0.18);
+
+  box-shadow:
+    0 18px 50px rgba(0,0,0,0.55),
+    0 0 0 1px rgba(0,200,150,0.12) inset;
+
+  padding: 6px;
+}
+
+/* ===== Items ===== */
+
+/* PANEL (fond du menu) */
+.mf-menu.mat-mdc-menu-panel {
+  /* un peu plus clair que ton actuel */
+  background: rgba(18, 36, 26, 0.92) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  border-radius: 16px;
+  border: 1px solid rgba(0, 230, 168, 0.18);
+
+  box-shadow:
+    0 18px 50px rgba(0,0,0,0.55),
+    0 0 0 1px rgba(0,200,150,0.12) inset;
+
+  /* ✅ important : padding identique gauche/droite */
+  padding: 8px !important;
+
+  /* parfois MDC force une min-width trop petite/chelou */
+  min-width: 240px;
+}
+
+/* CONTENT wrapper interne (corrige le “pas de marge à droite”) */
+.mf-menu .mat-mdc-menu-content {
+  padding: 0 !important;         /* on gère le padding via le panel */
+}
+
+/* ITEMS */
+.mf-menu .mat-mdc-menu-item {
+  height: 44px;
+  border-radius: 12px;
+
+  /* ✅ au lieu de margin, on fait du padding via le panel,
+     et on utilise une marge identique */
+  margin: 6px 0 !important;
+
+  font-weight: 650;
+  font-size: 14px;
+  color: var(--color-text-primary) !important;
+
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(0, 230, 168, 0.12);
+
+  transition: transform 0.12s ease, filter 0.12s ease, border-color 0.12s ease;
+}
+
+/* HOVER plus "halo" que sombre */
+.mf-menu .mat-mdc-menu-item:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  border-color: rgba(0, 230, 168, 0.32);
+  background: rgba(0, 230, 168, 0.10);
 }

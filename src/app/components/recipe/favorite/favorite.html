@@ -13,22 +13,34 @@
     @if (items().length === 0 && !loading() && !error()) {
         <div class="state">Aucune recette favorite.</div>
     }
+    <div class="card-scroll">
+      <div class="list">
+        @for (r of items(); track r.id) {
+          <div class="row">
+            <button class="row-main" type="button" (click)="openRecipe(r.id)">
+              <div class="r-title">{{ r.title }}</div>
+              <div class="r-meta">
+                Prep: {{ r.prepTime }}m • Cook: {{ r.cookTime }}m •
+              </div>
+            </button>
+  
+            @if (planningMode) {
+              <button
+                class="btn btn-square"
+                type="button"
+                title="Ajouter au planning"
+                (click)="$event.stopPropagation(); addToPlanning(r.id)">
 
-    <div class="list">
-      @for (r of items(); track r.id) {
-        <div class="row">
-          <button class="row-main" type="button" (click)="openRecipe(r.id)">
-            <div class="r-title">{{ r.title }}</div>
-            <div class="r-meta">
-              Prep: {{ r.prepTime }}m • Cook: {{ r.cookTime }}m •
-            </div>
-          </button>
+                <mat-icon>add</mat-icon>
 
-          @if (planningMode) {
-            <button class="btn" type="button" (click)="$event.stopPropagation(); addToPlanning(r.id)">Ajouter</button>
-          }
-        </div>
-      }
+              </button>
+            }
+          </div>
+        }
+      </div>
     </div>
+    <button class="btn btn-square" type="button" (click)="goBack()" title="Retour">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
   </section>
 </div>

@@ -90,7 +90,23 @@ input.invalid {
   color: var(--color-error);
 }
 
+.footer{
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  opacity: .9;
+}
 
+.link{
+  background: transparent;
+  border: 0;
+  color: var(--color-text-primary);
+  font-weight: 900;
+  cursor: pointer;
+  text-decoration: underline;
+}
 
 @media (max-width: 600px) {
   .login-page { padding: 120px 18px; }

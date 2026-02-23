@@ -1,0 +1,109 @@
+<div class="page-shell">
+  <section class="card card--wide pantry-card">
+
+    <div class="head">
+      <div class="title">Stock maison</div>
+    </div>
+
+    @if (loading()) { <div class="state">Chargement…</div> }
+    @if (error()) { <div class="state error">{{ error() }}</div> }
+
+    <div class="card-scroll">
+
+      <!-- AJOUT -->
+      <section class="block">
+        <div class="block-head">
+          <div class="block-title">Ajouter / Mettre à jour</div>
+        </div>
+
+        <div class="add-row">
+          <input class="input" placeholder="Ingredient"
+                 [ngModel]="newIngredientId()" (ngModelChange)="newIngredientId.set($event)" />
+
+          <input class="input qty-num" type="number" min="0" step="0.01" placeholder="Quantité"
+                 [ngModel]="newQuantity()" (ngModelChange)="newQuantity.set($event)" />
+
+          <select class="input qty-unit"
+                  [ngModel]="newUnit()" (ngModelChange)="newUnit.set($event)">
+            <option [ngValue]="Unit.Unknown">-</option>
+            <option [ngValue]="Unit.Gram">g</option>
+            <option [ngValue]="Unit.Kilogram">kg</option>
+            <option [ngValue]="Unit.Milliliter">ml</option>
+            <option [ngValue]="Unit.Liter">L</option>
+            <option [ngValue]="Unit.Piece">pc</option>
+            <option [ngValue]="Unit.Teaspoon">tsp</option>
+            <option [ngValue]="Unit.Tablespoon">tbsp</option>
+            <option [ngValue]="Unit.Pinch">pinch</option>
+          </select>
+
+          <button class="btn" type="button" (click)="addNew()">Ajouter</button>
+        </div>
+      </section>
+
+      <!-- LISTE -->
+      <section class="block">
+        <div class="block-head">
+          <div class="block-title">Mes ingrédients</div>
+          <div class="block-sub">{{ items().length }} élément(s)</div>
+        </div>
+
+        @if (items().length === 0 && !loading()) {
+          <div class="state">Aucun ingrédient pour le moment.</div>
+        }
+
+        <div class="list">
+          @for (it of items(); track it.ingredientId) {
+            <div class="row">
+
+              <!-- MODE VIEW -->
+              @if (editingId() !== it.ingredientId) {
+                <div class="row-main">
+                  <div class="row-title">{{ it.ingredientName }}</div>
+                  <div class="row-meta">
+                    {{ it.quantity }} {{ unitLabel(it.unit) }}
+                  </div>
+                </div>
+
+                <div class="row-actions">
+                  <button class="btn btn-square" type="button" title="Modifier" (click)="startEdit(it)">✎</button>
+                  <button class="btn btn-square" type="button" title="Supprimer" (click)="remove(it)">🗑</button>
+                </div>
+              }
+
+              <!-- MODE EDIT -->
+              @else {
+                <div class="edit-inline">
+                  <input class="input qty-num" type="number" min="0" step="0.01"
+                         [ngModel]="editQuantity()" (ngModelChange)="editQuantity.set($event)" />
+
+                  <select class="input qty-unit"
+                          [ngModel]="editUnit()" (ngModelChange)="editUnit.set($event)">
+                    <option [ngValue]="Unit.Unknown">-</option>
+                    <option [ngValue]="Unit.Gram">g</option>
+                    <option [ngValue]="Unit.Kilogram">kg</option>
+                    <option [ngValue]="Unit.Milliliter">ml</option>
+                    <option [ngValue]="Unit.Liter">L</option>
+                    <option [ngValue]="Unit.Piece">pc</option>
+                    <option [ngValue]="Unit.Teaspoon">tsp</option>
+                    <option [ngValue]="Unit.Tablespoon">tbsp</option>
+                    <option [ngValue]="Unit.Pinch">pinch</option>
+                  </select>
+
+                  <div class="row-actions">
+                    <button class="btn" type="button" (click)="saveEdit(it)">OK</button>
+                    <button class="btn btn-ghost" type="button" (click)="cancelEdit()">Annuler</button>
+                  </div>
+                </div>
+              }
+
+            </div>
+          }
+        </div>
+      </section>
+
+    </div>
+    <button class="btn btn-square" type="button" (click)="goBack()" title="Retour">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  </section>
+</div>

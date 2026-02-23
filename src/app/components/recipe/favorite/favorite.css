@@ -1,0 +1,97 @@
+/* IMPORTANT: pour que card-scroll fonctionne */
+.card.card--wide{
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Header */
+.head{
+  display: grid;
+  gap: 6px;
+  padding-bottom: 10px;
+}
+
+.title{
+  font-size: 18px;
+  font-weight: 950;
+  color: var(--color-text-primary);
+}
+
+.sub{
+  font-size: 12px;
+  opacity: .75;
+  color: var(--color-text-primary);
+}
+
+/* States (loading / empty / error) */
+.state{
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(0,0,0,0.18);
+  border: 1px solid rgba(0, 230, 168, 0.10);
+  color: var(--color-text-primary);
+}
+
+.state.error{
+  border-color: rgba(245, 31, 31, 0.35);
+  background: rgba(245, 31, 31, 0.08);
+}
+
+/* Scroll zone */
+.card-scroll{
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-top: 10px;
+}
+
+/* List */
+.list{
+  display: grid;
+  gap: 10px;
+}
+
+/* Row */
+.row{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(0,0,0,0.18);
+  border: 1px solid rgba(0, 230, 168, 0.10);
+}
+
+/* Main clickable part */
+.row-main{
+  background: transparent;
+  border: 0;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+  color: var(--color-text-primary);
+}
+
+.r-title{
+  font-weight: 950;
+  font-size: 14px;
+}
+
+.r-meta{
+  margin-top: 4px;
+  font-size: 12px;
+  opacity: .75;
+}
+
+/* Bouton Ajouter dans la row */
+.row .btn:not(.btn-square){
+  height: 40px;
+  border-radius: 14px;
+  padding: 0 14px;
+  white-space: nowrap;
+}
