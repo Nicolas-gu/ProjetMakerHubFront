@@ -1,8 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
+import { FormArray, FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Unit } from '../../../interfaces/units.models';
 import { RecipeService } from '../../../core/services/recipe-service';
 import { IngredientFG } from '../../../shared/ingredient-fg';
@@ -20,6 +19,8 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './recipe-edit.css',
 })
 export class RecipeEdit {
+
+  // Dépendances
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -42,7 +43,7 @@ export class RecipeEdit {
   selectedFile: File | null = null;
   selectedFileName = signal<string | null>(null);
 
-  // form
+  // Formulaire
   form = this.fb.nonNullable.group({
     title: this.fb.nonNullable.control('', Validators.required),
     description: this.fb.nonNullable.control('', Validators.required),
@@ -57,7 +58,6 @@ export class RecipeEdit {
     ingredients: this.fb.array<IngredientFG>([]), // on pousse des FormGroup
   });
 
-  // champs d'ajout
   stepText = this.fb.nonNullable.control('', Validators.required);
 
   ingredientName = this.fb.nonNullable.control('', Validators.required);
@@ -66,6 +66,7 @@ export class RecipeEdit {
   ingredientQuantityText = this.fb.control<string | null>(null);
 
   ngOnInit() {
+    // Récup l'Id dans la route
     const id = this.route.snapshot.paramMap.get('recipeId');
     if (!id) {
       this.error.set('RecipeId manquant.');
@@ -78,6 +79,7 @@ export class RecipeEdit {
     this.load();
   }
 
+  // chargement des tags
   loadTags() {
     this.tagsLoading.set(true);
     this.tagService.getAll().subscribe({
@@ -86,8 +88,51 @@ export class RecipeEdit {
         this.tagsLoading.set(false);
       },
       error: () => {
-        // pas bloquant : edit marche même sans tags
         this.tagsLoading.set(false);
+      }
+    });
+  }
+
+  // chargement de la recette, step et ingredient
+  load() {
+    this.loading.set(true);
+    this.error.set(null);
+
+    // recette
+    this.recipeService.getById(this.recipeId).subscribe({
+      next: (r: any) => {
+        this.form.patchValue({
+          title: r.title ?? '',
+          description: r.description ?? '',
+          basePortion: r.basePortion ?? 2,
+          prepTime: r.prepTime ?? 0,
+          cookTime: r.cookTime ?? 0,
+          isPublic: !!r.isPublic,
+          tagIds: r.tagIds
+        });
+
+        // steps
+        this.stepsFA.clear();
+        for (const s of (r.steps ?? [])) {
+          this.stepsFA.push(this.fb.nonNullable.control(String(s)));
+        }
+
+        // ingredients
+        this.ingredientsFA.clear();
+        for (const i of (r.ingredients ?? [])) {
+          const fg = this.makeIngredientFG({
+            name: i.name,
+            baseQuantity: i.quantity ?? null,
+            unit: i.unit ?? Unit.Unknown,
+            quantityText: i.quantityText ?? null,
+          });
+          this.ingredientsFA.push(fg);
+        }
+        this.loading.set(false);
+      },
+      error: (err) => {
+        this.error.set(err?.error?.message ?? 'Erreur chargement recette');
+        this.loading.set(false);
       }
     });
   }
@@ -119,6 +164,7 @@ export class RecipeEdit {
     return this.form.controls.ingredients as FormArray<IngredientFG>;
   }
 
+  // creation d'un ingredient
   private makeIngredientFG(data?: Partial<{
     name: string;
     baseQuantity: number | null;
@@ -130,53 +176,6 @@ export class RecipeEdit {
       baseQuantity: this.fb.control<number | null>(data?.baseQuantity ?? null),
       unit: this.fb.nonNullable.control<Unit>(data?.unit ?? Unit.Unknown),
       quantityText: this.fb.control<string | null>(data?.quantityText ?? null),
-    });
-  }
-
-  load() {
-    this.loading.set(true);
-    this.error.set(null);
-
-    this.recipeService.getById(this.recipeId).subscribe({
-      next: (r: any) => {
-        this.form.patchValue({
-          title: r.title ?? '',
-          description: r.description ?? '',
-          basePortion: r.basePortion ?? 2,
-          prepTime: r.prepTime ?? 0,
-          cookTime: r.cookTime ?? 0,
-          isPublic: !!r.isPublic,
-          tagIds: r.tagIds
-          //
-
-        });
-
-        // steps
-        this.stepsFA.clear();
-        for (const s of (r.steps ?? [])) {
-          this.stepsFA.push(this.fb.nonNullable.control(String(s)));
-        }
-
-        // ingredients
-        this.ingredientsFA.clear();
-        for (const i of (r.ingredients ?? [])) {
-          // ton DTO détail renvoie: { name, quantity, quantityText, unit }
-          // ton DTO update attend: baseQuantity + unit OU quantityText
-          const fg = this.makeIngredientFG({
-            name: i.name,
-            baseQuantity: i.quantity ?? null,
-            unit: i.unit ?? Unit.Unknown,
-            quantityText: i.quantityText ?? null,
-          });
-          this.ingredientsFA.push(fg);
-        }
-
-        this.loading.set(false);
-      },
-      error: (err) => {
-        this.error.set(err?.error?.message ?? 'Erreur chargement recette');
-        this.loading.set(false);
-      }
     });
   }
 
@@ -231,7 +230,7 @@ export class RecipeEdit {
       this.error.set('Formulaire invalide.');
       return;
     }
-
+    // map éléments du form vers dto
     const dto = {
       title: this.form.controls.title.value.trim(),
       description: this.form.controls.description.value.trim(),
@@ -251,9 +250,10 @@ export class RecipeEdit {
 
     this.saving.set(true);
 
+    // update recette
     this.recipeService.update(this.recipeId, dto).subscribe({
       next: () => {
-        // ✅ si on a choisi une image, on l’upload après l’update
+        // upload image
         if (this.selectedFile) {
           this.recipeService.uploadImage(this.recipeId, this.selectedFile).subscribe({
             next: () => {

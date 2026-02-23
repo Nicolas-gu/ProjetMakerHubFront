@@ -1,7 +1,6 @@
 <div class="page-shell">
   <section class="card card--wide recipe-detail-card">
 
-    <!-- HEADER -->
     <header class="head">
 
   @if (data(); as r) {
@@ -12,21 +11,17 @@
                 <mat-icon>add</mat-icon>
             </button>
             }
-      <!-- Favori -->
       <button
         class="btn btn-square"
         type="button"
         [title]="r.isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'"
         (click)="toggleFavorite()">
-
         <mat-icon>
           {{ r.isFavorite ? 'star' : 'star_border' }}
         </mat-icon>
       </button>
 
       @if (isAdmin || isOwner) {
-
-        <!-- Modifier -->
         <button
           class="btn btn-square"
           type="button"
@@ -35,7 +30,6 @@
           <mat-icon>edit</mat-icon>
         </button>
 
-        <!-- Supprimer -->
         <button
           class="btn btn-square danger"
           type="button"
@@ -43,15 +37,10 @@
           (click)="deleteRecipe()">
           <mat-icon>delete</mat-icon>
         </button>
-
       }
-
     </div>
   }
-
 </header>
-
-    <!-- STATES (fixes) -->
     @if (loading()) {
       <div class="state">Chargement…</div>
     }
@@ -59,13 +48,8 @@
     @if (error()) {
       <div class="state error">{{ error() }}</div>
     }
-
-    <!-- ✅ SCROLLABLE CONTENT -->
     <div class="card-scroll">
-
       @if (data(); as r) {
-
-        <!-- HERO -->
         <div class="hero">
           <div class="image">
             @if (r.imageUrl) {
@@ -74,7 +58,6 @@
               <div class="placeholder">Aucune image</div>
             }
           </div>
-
           <div class="info">
             <div class="r-title">{{ r.title }}</div>
             <div class="r-desc">{{ r.description }}</div>
@@ -85,7 +68,7 @@
               <div class="pill"><mat-icon>whatshot</mat-icon> {{ r.cookTime }} min</div>
             </div>
 
-            @if (r.tags?.length) {
+            @if (r.tags.length) {
               <div class="chips">
                 @for (t of r.tags; track t) {
                   <span class="chip">#{{ t }}</span>
@@ -95,16 +78,13 @@
           </div>
         </div>
 
-        <!-- INGREDIENTS -->
         <section class="block">
           <div class="block-title">Ingrédients</div>
-
           <div class="list">
             @for (i of r.ingredients; track i.name) {
               <div class="row">
                 <div class="row-main">
                   <div class="row-title">{{ i.name }}</div>
-
                   <div class="row-meta">
                     @if (i.quantityText) {
                       {{ i.quantityText }}
@@ -118,10 +98,8 @@
           </div>
         </section>
 
-        <!-- STEPS -->
         <section class="block">
           <div class="block-title">Étapes</div>
-
           <div class="list">
             @for (s of r.steps; track $index) {
               <div class="row">
@@ -133,13 +111,11 @@
             }
           </div>
         </section>
-
       }
-      
-
     </div>
+    
     <button class="btn btn-square" type="button" (click)="goBack()" title="Retour">
-        <mat-icon>arrow_back</mat-icon>
-        </button>
+      <mat-icon>arrow_back</mat-icon>
+    </button>
   </section>
 </div>

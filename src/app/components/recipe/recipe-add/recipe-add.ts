@@ -16,6 +16,8 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './recipe-add.css',
 })
 export class RecipeAdd {
+
+  // Dépendances
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private recipeService = inject(RecipeService);
@@ -28,9 +30,7 @@ export class RecipeAdd {
 
   selectedFile: File | null = null;
 
-  
-
-  // ✅ Formulaire principal (simple)
+  // Création du formulaire principal
   form = this.fb.nonNullable.group({
     title: this.fb.nonNullable.control('', Validators.required),
     description: this.fb.nonNullable.control('', Validators.required),
@@ -41,20 +41,19 @@ export class RecipeAdd {
     isPublic: this.fb.nonNullable.control(false),
     isFavorite: this.fb.nonNullable.control(false),
 
-    // listes dynamiques
+    // liste dynamique
     steps: this.fb.array<FormControl<string>>([]),
     ingredients: this.fb.array<IngredientFG>([]),
   });
 
-  // petits champs d'ajout (pas dans le form principal)
+  // formulaire ingredient
   stepText = this.fb.nonNullable.control('', Validators.required);
 
   ingredientName = this.fb.nonNullable.control('', Validators.required);
-  ingredientQuantity = this.fb.control<number | null>(null);     // baseQuantity
+  ingredientQuantity = this.fb.control<number | null>(null);
   ingredientUnit = this.fb.nonNullable.control<Unit>(Unit.Unknown);
   ingredientQuantityText = this.fb.control<string | null>(null);
 
-  // --------- getters ----------
   get stepsFA() {
     return this.form.controls.steps;
   }
@@ -62,12 +61,8 @@ export class RecipeAdd {
     return this.form.controls.ingredients as FormArray<IngredientFG>;
   }
 
-  onFile(e: Event) {
-    const input = e.target as HTMLInputElement;
-    this.selectedFile = input.files?.[0] ?? null;
-  }
-
-  // ✅ Ajouter une étape (simple)
+  
+  // Ajouter une étape
   addStep() {
     const text = this.stepText.value.trim();
     if (!text) return;
@@ -80,16 +75,16 @@ export class RecipeAdd {
     this.stepsFA.removeAt(i);
   }
 
-  // ✅ Ajouter un ingrédient (3 champs + texte)
+  // Ajouter un ingrédient
   addIngredient() {
     const name = this.ingredientName.value.trim();
     if (!name) return;
-
+    
     const qtText = (this.ingredientQuantityText.value ?? '').trim();
     const qty = this.ingredientQuantity.value;
     const unit = this.ingredientUnit.value;
 
-    // On crée un petit groupe pour 1 ingrédient
+    // Crée un petit groupe pour 1 ingrédient
     const ing = this.fb.group({
       name: this.fb.nonNullable.control(name),
       baseQuantity: this.fb.control<number | null>(null),
@@ -97,7 +92,7 @@ export class RecipeAdd {
       quantityText: this.fb.control<string | null>(null),
     });
 
-    // règle simple : si quantityText est rempli => priorité au texte
+    // Si quantityText est rempli => priorité au texte
     if (qtText) {
       ing.controls.quantityText.setValue(qtText);
       ing.controls.baseQuantity.setValue(null);
@@ -107,9 +102,10 @@ export class RecipeAdd {
       ing.controls.unit.setValue(unit ?? Unit.Unknown);
       ing.controls.quantityText.setValue(null);
     }
-
+    
+    // ajout des ingredients
     this.ingredientsFA.push(ing);
-
+    
     // reset champs
     this.ingredientName.setValue('');
     this.ingredientQuantity.setValue(null);
@@ -124,6 +120,7 @@ export class RecipeAdd {
   // validation simple
   private validateBusiness(): string | null {
     if (this.ingredientsFA.length === 0) return 'Ajoute au moins 1 ingrédient.';
+    if (this.stepsFA.length === 0) return 'Ajoute au moins 1 étape.';
     return null;
   }
 
@@ -142,6 +139,7 @@ export class RecipeAdd {
       return;
     }
 
+    // map éléments du form vers dto
     const dto: RecipeCreateDto = {
       title: this.form.controls.title.value.trim(),
       description: this.form.controls.description.value.trim(),
@@ -150,12 +148,11 @@ export class RecipeAdd {
       cookTime: this.form.controls.cookTime.value,
       isPublic: this.form.controls.isPublic.value,
 
-      // tags pas gérés ici => vide
       tagIds: [],
 
       steps: this.stepsFA.controls.map(c => c.value),
 
-      ingredients: this.ingredientsFA.controls.map((g: any) => ({
+      ingredients: this.ingredientsFA.controls.map(g => ({
         name: g.controls.name.value,
         baseQuantity: g.controls.baseQuantity.value,
         unit: g.controls.unit.value,
@@ -165,18 +162,16 @@ export class RecipeAdd {
 
     this.saving.set(true);
 
+    // Appel API
     this.recipeService.create(dto).subscribe({
       next: (res) => {
         const id = res?.id;
         if (!id) {
           this.saving.set(false);
-          this.error.set("Création OK mais l'API n'a pas renvoyé l'id.");
           return;
         }
-
-        // favorite ensuite (optionnel)
+        // ensuite a on l'id pour favoris et image
         const afterFavorite = () => {
-          // upload image ensuite (optionnel)
           if (this.selectedFile) {
             this.recipeService.uploadImage(id, this.selectedFile).subscribe({
               next: () => {
@@ -232,6 +227,11 @@ export class RecipeAdd {
 
     this.selectedFile = null;
     this.error.set(null);
+  }
+
+  onFile(e: Event) {
+    const input = e.target as HTMLInputElement;
+    this.selectedFile = input.files?.[0] ?? null;
   }
 
   goBack() {

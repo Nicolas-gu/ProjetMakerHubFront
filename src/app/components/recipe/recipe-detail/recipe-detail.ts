@@ -19,6 +19,8 @@ import { Location } from '@angular/common';
   styleUrl: './recipe-detail.css',
 })
 export class RecipeDetail {
+
+  // Dépendances
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private recipeService = inject(RecipeService);
@@ -51,59 +53,24 @@ export class RecipeDetail {
   }
 
   ngOnInit() {
-    // 1) lire les query params pour savoir si on vient du planning
+    // recup info ds les query
     const qp = this.route.snapshot.queryParamMap;
-
     this.planningMode = qp.get('from') === 'planning';
     this.targetDay = qp.get('day');
-
-    // attention : tu avais parfois weekstart en minuscule
-    this.targetWeekStart = qp.get('weekStart') ?? qp.get('weekstart');
-
-    // type doit devenir SlotType | null
+    this.targetWeekStart = qp.get('weekStart');
     this.targetType = parseSlotType(qp.get('type'));
-
-    // 2) lire le param route /recipe/:recipeId
+    // recup id dans la route
     const id = this.route.snapshot.paramMap.get('recipeId');
     if (!id) {
       this.error.set('RecipeId manquant.');
       this.loading.set(false);
       return;
     }
-
     this.recipeId = id;
     this.fetch();
   }
 
-  addToPlanning() {
-    if (!this.planningMode) return;
-
-    const day = this.targetDay;
-    const weekStart = this.targetWeekStart;
-    const type = this.targetType;
-
-    if (!day || !weekStart || !type) {
-      this.error.set("Paramètres planning manquants (day/weekStart/type).");
-      return;
-    }
-
-    this.planningService.upsertSlot(weekStart, {
-      date: day,
-      type,
-      portion: this.defaultPortion,
-      recipeId: this.recipeId,
-    }).subscribe({
-      next: () => {
-        // revenir sur home en gardant semaine + jour
-        this.router.navigate(['/home'], { queryParams: { weekStart, day } });
-      },
-      error: (err) => {
-        console.error('addToPlanning error', err);
-        this.error.set("Impossible d'ajouter au planning.");
-      }
-    });
-  }
-
+  // charge la recette
   fetch() {
     this.loading.set(true);
     this.error.set(null);
@@ -123,26 +90,53 @@ export class RecipeDetail {
     });
   }
 
+  // pour ajouter la recette au planning (si planningMode)
+  addToPlanning() {
+    if (!this.planningMode) return;
+
+    const day = this.targetDay;
+    const weekStart = this.targetWeekStart;
+    const type = this.targetType;
+
+    if (!day || !weekStart || !type) {
+      this.error.set("Paramètres planning manquants (day/weekStart/type).");
+      return;
+    }
+
+    this.planningService.upsertSlot(weekStart, {
+      date: day,
+      type,
+      portion: this.defaultPortion,
+      recipeId: this.recipeId,
+    }).subscribe({
+      next: () => {
+        this.router.navigate(['/home'], { queryParams: { weekStart, day } });
+      },
+      error: (err) => {
+        console.error('addToPlanning error', err);
+        this.error.set("Impossible d'ajouter au planning.");
+      }
+    });
+  }
+
   toggleFavorite() {
+    // recup recette
     const r = this.data();
     if (!r) return;
-
-    // on change l'affichage tout de suite (optimistic)
+    // si favorite => set false et inversement
     const newValue = !r.isFavorite;
+    // copie la recette et change isFavorite
     this.data.set({ ...r, isFavorite: newValue });
-
+    
     const call$ = newValue
       ? this.recipeService.addFavorite(this.recipeId)
       : this.recipeService.removeFavorite(this.recipeId);
 
     call$.subscribe({
       next: () => {
-        // ok, rien à faire
       },
-      error: (err) => {
-        console.error('toggle favorite error', err);
-
-        // rollback
+      error: () => {
+        // reviens a l'etat precedent si requete echoue
         const cur = this.data();
         if (cur) this.data.set({ ...cur, isFavorite: !newValue });
 
@@ -151,8 +145,8 @@ export class RecipeDetail {
     });
   }
 
+  // navigue sur recipe-edite
   goUpdate() {
-    // Option 1 (simple) : on ouvre une page dédiée edit (recommandé)
     this.router.navigate(['/recipe', this.recipeId, 'edit']);
   }
 
