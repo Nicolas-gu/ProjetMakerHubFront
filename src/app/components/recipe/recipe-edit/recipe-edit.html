@@ -1,27 +1,21 @@
 <div class="page-shell">
   <section class="card card--wide recipe-card" [formGroup]="form">
-
     <header class="recipe-head">
-
       <div class="titles">
         <div class="title">Modifier recette</div>
         <div class="sub">Mise à jour</div>
       </div>
-
       <label class="toggle">
         <input type="checkbox" formControlName="isPublic" />
         <span>Public</span>
       </label>
     </header>
-
     @if (loading()) {
       <div class="state">Chargement…</div>
     }
-
     @if (error()) {
       <div class="state error">{{ error() }}</div>
     }
-
     @if (!loading()) {
         <div class="card-scroll">
             <section class="block">
@@ -29,7 +23,6 @@
                 <div class="block-title">Image</div>
                 <div class="block-sub">Optionnel</div>
               </div>
-      
               <div class="image-row">
                 <input class="input" type="file" accept="image/png,image/jpeg,image/webp" (change)="onFileSelected($event)" />
                 @if (selectedFileName()) {
@@ -39,40 +32,33 @@
                 }
               </div>
             </section>
-      
             <div class="grid">
               <div class="field">
                 <label>Titre</label>
                 <input class="input" formControlName="title" />
               </div>
-      
               <div class="field field--wide">
                 <label>Description</label>
                 <textarea class="input textarea" rows="3" formControlName="description"></textarea>
               </div>
-      
               <div class="field">
                 <label>Portion de base</label>
                 <input class="input" type="number" min="1" formControlName="basePortion" />
               </div>
-      
               <div class="field">
                 <label>Préparation (min)</label>
                 <input class="input" type="number" min="0" formControlName="prepTime" />
               </div>
-      
               <div class="field">
                 <label>Cuisson (min)</label>
                 <input class="input" type="number" min="0" formControlName="cookTime" />
               </div>
             </div>
-      
             <section class="block">
               <div class="block-head">
                 <div class="block-title">Tags</div>
                 <div class="block-sub">Clique pour sélectionner</div>
               </div>
-      
               @if (tagsLoading()) {
                 <div class="state">Chargement des tags…</div>
               } @else {
@@ -89,17 +75,15 @@
                 </div>
               }
             </section>
-      
             <section class="block">
               <div class="block-head">
                 <div class="block-title">Ingrédients</div>
                 <div class="block-sub">Soit quantité+unité, soit texte</div>
               </div>
-      
+
               <div class="ing-add">
                 <input class="input" [formControl]="ingredientName" placeholder="Nom" />
                 <input class="input qty-num" type="number" min="0" step="0.01" [formControl]="ingredientQuantity" placeholder="Quantité" />
-      
                 <select class="input qty-unit" [formControl]="ingredientUnit">
                   <option [ngValue]="Unit.Unknown">-</option>
                   <option [ngValue]="Unit.Gram">g</option>
@@ -111,7 +95,6 @@
                   <option [ngValue]="Unit.Tablespoon">tbsp</option>
                   <option [ngValue]="Unit.Pinch">pinch</option>
                 </select>
-      
                 <input class="input qty-text" [formControl]="ingredientQuantityText" placeholder="ou texte (ex: 1 boîte)" />
                 <button class="btn" type="button" (click)="addIngredient()">Ajouter</button>
               </div>
@@ -129,7 +112,6 @@
                         }
                       </div>
                     </div>
-      
                     <div class="row-actions">
                       <button class="btn btn-square" type="button" title="Supprimer" (click)="removeIngredient($index)">🗑</button>
                     </div>
@@ -137,17 +119,14 @@
                 }
               </div>
             </section>
-      
             <section class="block">
               <div class="block-head">
                 <div class="block-title">Étapes</div>
               </div>
-      
               <div class="tag-add">
                 <input class="input" [formControl]="stepText" placeholder="Nouvelle étape…" />
                 <button class="btn" type="button" (click)="addStep()">Ajouter</button>
               </div>
-      
               <div class="list">
                 @for (s of stepsFA.controls; track $index) {
                   <div class="row">
@@ -155,7 +134,6 @@
                       <div class="row-title">Étape {{ $index + 1 }}</div>
                       <div class="row-meta">{{ s.value }}</div>
                     </div>
-      
                     <div class="row-actions">
                       <button class="btn btn-square" type="button" title="Supprimer" (click)="removeStep($index)">🗑</button>
                     </div>
@@ -163,8 +141,8 @@
                 }
               </div>
             </section>
-        </div>
-
+          </div>
+          
       <footer class="footer">
         <button class="btn btn-square" type="button" [disabled]="saving()" (click)="save()">
           <mat-icon>check_circle_outline</mat-icon>

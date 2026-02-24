@@ -13,7 +13,7 @@ export class RecipeService {
   private http = inject(HttpClient);
   private api = environment.apiBaseUrl;
 
-  getById(recipeId: string) {
+  getById(recipeId: string): Observable<RecipeDetailResponseDto> {
     return this.http.get<RecipeDetailResponseDto>(`${this.api}/Recipe/${recipeId}`);
   }
 

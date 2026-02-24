@@ -19,6 +19,8 @@ import { Location } from '@angular/common';
   styleUrl: './recipe-detail.css',
 })
 export class RecipeDetail {
+
+  // Dépendances
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private recipeService = inject(RecipeService);
@@ -53,26 +55,45 @@ export class RecipeDetail {
   }
 
   ngOnInit() {
+    // recup info ds les query
     const qp = this.route.snapshot.queryParamMap;
-
     this.planningMode = qp.get('from') === 'planning';
     this.targetDay = qp.get('day');
-
-    this.targetWeekStart = qp.get('weekStart') ?? qp.get('weekstart');
-
+    this.targetWeekStart = qp.get('weekStart');
     this.targetType = parseSlotType(qp.get('type'));
-
+    // recup id dans la route
     const id = this.route.snapshot.paramMap.get('recipeId');
     if (!id) {
       this.error.set('RecipeId manquant.');
       this.loading.set(false);
       return;
     }
-
     this.recipeId = id;
     this.fetch();
   }
 
+  // charge la recette
+  fetch() {
+    this.loading.set(true);
+    this.error.set(null);
+
+    this.recipeService.getById(this.recipeId).subscribe({
+      next: (res) => {
+        this.data.set(res);
+
+        const userId = this.tokenService.getUserId();
+        this.isAdmin = this.tokenService.isAdmin();
+        this.isOwner = res.createdBy === userId;
+        this.loading.set(false);
+      },
+      error: (err) => {
+        this.error.set(err?.error?.message ?? 'Erreur chargement recette');
+        this.loading.set(false);
+      }
+    });
+  }
+
+  // pour ajouter la recette au planning (si planningMode)
   addToPlanning() {
     if (!this.planningMode) return;
 
@@ -101,34 +122,16 @@ export class RecipeDetail {
     });
   }
 
-  fetch() {
-    this.loading.set(true);
-    this.error.set(null);
-
-    this.recipeService.getById(this.recipeId).subscribe({
-      next: (res) => {
-        this.data.set(res);
-
-        const userId = this.tokenService.getUserId();
-        this.isAdmin = this.tokenService.isAdmin();
-        this.isOwner = res.createdBy === userId;
-        this.loading.set(false);
-      },
-      error: (err) => {
-        this.error.set(err?.error?.message ?? 'Erreur chargement recette');
-        this.loading.set(false);
-      }
-    });
-  }
-
   toggleFavorite() {
-    const r = this.data(); // Récupère la recette
+    // recup recette
+    const r = this.data();
     if (!r) return;
-
+    // si favorite => set false et inversement
     const newValue = !r.isFavorite;
-    this.data.set({ ...r, isFavorite: newValue }); // Maj immédiate de favorite (UI)
-
-    const call$ = newValue  // Appel API selon état
+    // copie la recette et change isFavorite
+    this.data.set({ ...r, isFavorite: newValue });
+    
+    const call$ = newValue
       ? this.recipeService.addFavorite(this.recipeId)
       : this.recipeService.removeFavorite(this.recipeId);
 
@@ -136,7 +139,7 @@ export class RecipeDetail {
       next: () => {
       },
       error: () => {
-        // rollback
+        // reviens a l'etat precedent si requete echoue
         const cur = this.data();
         if (cur) this.data.set({ ...cur, isFavorite: !newValue });
         
@@ -145,8 +148,8 @@ export class RecipeDetail {
     });
   }
 
+  // navigue sur recipe-edite
   goUpdate() {
-    // Option 1 (simple) : on ouvre une page dédiée edit (recommandé)
     this.router.navigate(['/recipe', this.recipeId, 'edit']);
   }
 
