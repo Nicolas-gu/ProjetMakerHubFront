@@ -10,7 +10,6 @@
 
     <div class="card-scroll">
 
-      <!-- AJOUT -->
       <section class="block">
         <div class="block-head">
           <div class="block-title">Ajouter / Mettre à jour</div>
@@ -18,7 +17,7 @@
 
         <div class="add-row">
           <input class="input" placeholder="Ingredient"
-                 [ngModel]="newIngredientId()" (ngModelChange)="newIngredientId.set($event)" />
+                 [ngModel]="newIngredientName()" (ngModelChange)="newIngredientName.set($event)" />
 
           <input class="input qty-num" type="number" min="0" step="0.01" placeholder="Quantité"
                  [ngModel]="newQuantity()" (ngModelChange)="newQuantity.set($event)" />
@@ -40,7 +39,6 @@
         </div>
       </section>
 
-      <!-- LISTE -->
       <section class="block">
         <div class="block-head">
           <div class="block-title">Mes ingrédients</div>
@@ -55,7 +53,6 @@
           @for (it of items(); track it.ingredientId) {
             <div class="row">
 
-              <!-- MODE VIEW -->
               @if (editingId() !== it.ingredientId) {
                 <div class="row-main">
                   <div class="row-title">{{ it.ingredientName }}</div>
@@ -65,12 +62,11 @@
                 </div>
 
                 <div class="row-actions">
-                  <button class="btn btn-square" type="button" title="Modifier" (click)="startEdit(it)">✎</button>
+                
                   <button class="btn btn-square" type="button" title="Supprimer" (click)="remove(it)">🗑</button>
                 </div>
               }
 
-              <!-- MODE EDIT -->
               @else {
                 <div class="edit-inline">
                   <input class="input qty-num" type="number" min="0" step="0.01"
@@ -89,10 +85,7 @@
                     <option [ngValue]="Unit.Pinch">pinch</option>
                   </select>
 
-                  <div class="row-actions">
-                    <button class="btn" type="button" (click)="saveEdit(it)">OK</button>
-                    <button class="btn btn-ghost" type="button" (click)="cancelEdit()">Annuler</button>
-                  </div>
+                  
                 </div>
               }
 

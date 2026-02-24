@@ -1,56 +1,75 @@
 <div class="auth-page">
-  <section class="card auth-card" [formGroup]="registerForm">
-
+  <section class="card auth-card">
     <header class="auth-head">
-      <div>
-        <h1>Créer un compte</h1>
-        <p>Inscris-toi pour commencer.</p>
+      <div class="titles">
+        <div class="title">Créer un compte</div>
       </div>
     </header>
 
-    @if (error()) {
-      <div class="alert">{{ error() }}</div>
+    @if (errorMessage()) {
+      <div class="state error">{{ errorMessage() }}</div>
     }
 
-    <div class="grid">
-      <label class="field">
-        <span>Nom</span>
-        <input class="input" type="text" formControlName="displayName" autocomplete="name" />
-        @if (registerForm.controls.displayName.touched && registerForm.controls.displayName.invalid) {
-          <small>Minimum 2 caractères.</small>
-        }
-      </label>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
+      <div class="grid">
+        <label class="field">
+          <span class="label">Nom</span>
+          <input
+            class="input"
+            type="text"
+            formControlName="displayName"
+            autocomplete="name"/>
+          @if (registerForm.controls.displayName.touched && registerForm.controls.displayName.invalid) {
+            <small class="hint error">Minimum 2 caractères.</small>
+          }
+        </label>
 
-      <label class="field">
-        <span>Email</span>
-        <input class="input" type="email" formControlName="email" autocomplete="email" />
-        @if (registerForm.controls.email.touched && registerForm.controls.email.invalid) {
-          <small>Email invalide.</small>
-        }
-      </label>
+        <label class="field">
+          <span class="label">Email</span>
+          <input
+            class="input"
+            type="email"
+            formControlName="email"
+            autocomplete="email"/>
+          @if (registerForm.controls.email.touched && registerForm.controls.email.invalid) {
+            <small class="hint error">Email invalide.</small>
+          }
+        </label>
 
-      <label class="field">
-        <span>Mot de passe</span>
-        <input class="input" type="password" formControlName="password" autocomplete="new-password" />
-        @if (registerForm.controls.password.touched && registerForm.controls.password.invalid) {
-          <small>Minimum 6 caractères.</small>
-        }
-      </label>
+        <label class="field">
+          <span class="label">Mot de passe</span>
+          <input
+            class="input"
+            type="password"
+            formControlName="password"
+            autocomplete="new-password"
+            placeholder="••••••" />
+          @if (registerForm.controls.password.touched && registerForm.controls.password.invalid) {
+            <small class="hint error">Minimum 6 caractères.</small>
+          }
+        </label>
 
-      <label class="field">
-        <span>Confirmer</span>
-        <input class="input" type="password" formControlName="confirmPassword" autocomplete="new-password" />
-      </label>
-    </div>
+        <label class="field">
+          <span class="label">Confirmer</span>
+          <input
+            class="input"
+            type="password"
+            formControlName="confirmPassword"
+            autocomplete="new-password"
+            placeholder="••••••" />
+        </label>
+      </div>
 
-    <button class="btn full" type="button" [disabled]="loading()" (click)="submit()">
-      @if (loading()) { Création… } @else { Créer mon compte }
-    </button>
+      <div class="actions">
+        <button class="btn full-width" type="submit" [disabled]="loading() || registerForm.invalid">
+          @if (loading()) { Création… } @else { Créer mon compte }
+        </button>
+      </div>
+    </form>
 
     <div class="footer">
       <span>Déjà un compte ?</span>
       <button class="link" type="button" (click)="goLogin()">Se connecter</button>
     </div>
-
   </section>
 </div>

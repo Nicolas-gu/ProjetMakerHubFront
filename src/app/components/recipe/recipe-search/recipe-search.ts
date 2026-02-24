@@ -71,8 +71,8 @@ export class RecipeSearch implements OnInit {
         queryParams: {
           from: 'planning',
           day: this.targetDay,
-          type: this.targetType,          // SlotType (1|2|3)
-          weekStart: this.targetWeekStart // attention au nom
+          type: this.targetType,          
+          weekStart: this.targetWeekStart 
         }
       });
     } else {

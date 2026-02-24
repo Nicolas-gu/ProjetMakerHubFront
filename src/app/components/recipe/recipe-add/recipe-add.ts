@@ -28,9 +28,6 @@ export class RecipeAdd {
 
   selectedFile: File | null = null;
 
-  
-
-  // ✅ Formulaire principal (simple)
   form = this.fb.nonNullable.group({
     title: this.fb.nonNullable.control('', Validators.required),
     description: this.fb.nonNullable.control('', Validators.required),
@@ -41,12 +38,10 @@ export class RecipeAdd {
     isPublic: this.fb.nonNullable.control(false),
     isFavorite: this.fb.nonNullable.control(false),
 
-    // listes dynamiques
     steps: this.fb.array<FormControl<string>>([]),
     ingredients: this.fb.array<IngredientFG>([]),
   });
 
-  // petits champs d'ajout (pas dans le form principal)
   stepText = this.fb.nonNullable.control('', Validators.required);
 
   ingredientName = this.fb.nonNullable.control('', Validators.required);
@@ -54,7 +49,6 @@ export class RecipeAdd {
   ingredientUnit = this.fb.nonNullable.control<Unit>(Unit.Unknown);
   ingredientQuantityText = this.fb.control<string | null>(null);
 
-  // --------- getters ----------
   get stepsFA() {
     return this.form.controls.steps;
   }
@@ -67,7 +61,6 @@ export class RecipeAdd {
     this.selectedFile = input.files?.[0] ?? null;
   }
 
-  // ✅ Ajouter une étape (simple)
   addStep() {
     const text = this.stepText.value.trim();
     if (!text) return;
@@ -80,7 +73,6 @@ export class RecipeAdd {
     this.stepsFA.removeAt(i);
   }
 
-  // ✅ Ajouter un ingrédient (3 champs + texte)
   addIngredient() {
     const name = this.ingredientName.value.trim();
     if (!name) return;
@@ -89,7 +81,6 @@ export class RecipeAdd {
     const qty = this.ingredientQuantity.value;
     const unit = this.ingredientUnit.value;
 
-    // On crée un petit groupe pour 1 ingrédient
     const ing = this.fb.group({
       name: this.fb.nonNullable.control(name),
       baseQuantity: this.fb.control<number | null>(null),
@@ -97,7 +88,6 @@ export class RecipeAdd {
       quantityText: this.fb.control<string | null>(null),
     });
 
-    // règle simple : si quantityText est rempli => priorité au texte
     if (qtText) {
       ing.controls.quantityText.setValue(qtText);
       ing.controls.baseQuantity.setValue(null);
@@ -110,7 +100,6 @@ export class RecipeAdd {
 
     this.ingredientsFA.push(ing);
 
-    // reset champs
     this.ingredientName.setValue('');
     this.ingredientQuantity.setValue(null);
     this.ingredientUnit.setValue(Unit.Unknown);
@@ -121,7 +110,6 @@ export class RecipeAdd {
     this.ingredientsFA.removeAt(i);
   }
 
-  // validation simple
   private validateBusiness(): string | null {
     if (this.ingredientsFA.length === 0) return 'Ajoute au moins 1 ingrédient.';
     return null;
@@ -150,7 +138,6 @@ export class RecipeAdd {
       cookTime: this.form.controls.cookTime.value,
       isPublic: this.form.controls.isPublic.value,
 
-      // tags pas gérés ici => vide
       tagIds: [],
 
       steps: this.stepsFA.controls.map(c => c.value),
@@ -174,9 +161,7 @@ export class RecipeAdd {
           return;
         }
 
-        // favorite ensuite (optionnel)
         const afterFavorite = () => {
-          // upload image ensuite (optionnel)
           if (this.selectedFile) {
             this.recipeService.uploadImage(id, this.selectedFile).subscribe({
               next: () => {

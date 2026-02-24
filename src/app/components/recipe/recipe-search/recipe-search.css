@@ -1,15 +1,11 @@
-/* ===============================
-   Card layout (IMPORTANT)
-================================ */
+
 .card.card--wide{
   display: flex;
   flex-direction: column;
   min-height: 0;
 }
 
-/* ===============================
-   Header
-================================ */
+
 .head{
   display: grid;
   gap: 6px;
@@ -22,7 +18,7 @@
   color: var(--color-text-primary);
 }
 
-/* 🔥 Bandeau planning amélioré */
+
 .sub{
   font-size: 12px;
   color: var(--color-text-primary);
@@ -37,9 +33,7 @@
   width: fit-content;
 }
 
-/* ===============================
-   Searchbar
-================================ */
+
 .searchbar{
   margin: 12px 0 14px;
 }
@@ -53,16 +47,14 @@
   background: rgba(0,0,0,0.22);
   border: 1px solid rgba(0, 230, 168, 0.14);
 
-  color: var(--color-text-primary); /* ✅ FIX TEXTE NOIR */
+  color: var(--color-text-primary);
 }
 
 .input::placeholder{
   color: rgba(234, 246, 239, 0.45);
 }
 
-/* ===============================
-   Scroll zone
-================================ */
+
 .card-scroll{
   flex: 1 1 auto;
   min-height: 0;
@@ -70,9 +62,7 @@
   -webkit-overflow-scrolling: touch;
 }
 
-/* ===============================
-   List
-================================ */
+
 .list{
   display: grid;
   gap: 10px;
@@ -91,9 +81,7 @@
   border: 1px solid rgba(0, 230, 168, 0.10);
 }
 
-/* ===============================
-   Main clickable area
-================================ */
+
 .row-main{
   border: 0;
   background: transparent;
@@ -101,7 +89,7 @@
   cursor: pointer;
   padding: 0;
 
-  color: var(--color-text-primary); /* ✅ FIX TEXTE NOIR */
+  color: var(--color-text-primary); 
 }
 
 .r-title{
@@ -115,9 +103,7 @@
   margin-top: 4px;
 }
 
-/* ===============================
-   States
-================================ */
+
 .state{
   margin-top: 10px;
   padding: 12px;

@@ -98,7 +98,7 @@ export class ShoppingList implements OnInit{
       next: () => {
         this.newIngredientName = '';
         this.newQuantityText = '';
-        this.load;
+        this.load();
       }
     });
   }

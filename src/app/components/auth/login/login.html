@@ -36,8 +36,8 @@
         }
       </div>
 
-      <button class="btn full-width margin-top-button" type="submit" [disabled]="loginForm.invalid || loading">
-        {{ loading ? 'Connexion…' : 'Se connecter' }}
+      <button class="btn full-width margin-top-button" type="submit" [disabled]="loginForm.invalid || loading()">
+        {{ loading() ? 'Connexion…' : 'Se connecter' }}
       </button>
       <div class="footer">
         <span>Pas encore de compte ?</span>
@@ -45,8 +45,8 @@
           Cliquez ici
         </button>
       </div>
-      @if (errorMessage) {
-        <p class="form-error">{{ errorMessage }}</p>
+      @if (errorMessage()) {
+        <p class="form-error">{{ errorMessage() }}</p>
       }
     </form>
     

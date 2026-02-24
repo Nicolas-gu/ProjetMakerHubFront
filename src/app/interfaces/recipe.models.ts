@@ -25,6 +25,7 @@ export interface RecipeDetailResponseDto {
   cookTime: number;
   isPublic: boolean;
   isFavorite: boolean;
+  createdBy: string;
   steps: string[];
   tags: string[];
   ingredients: IngredientDetailDto[];

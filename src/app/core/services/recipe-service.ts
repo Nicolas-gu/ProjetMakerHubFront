@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { RecipeSearchRequestDto, RecipeSearchResponseDto } from '../../interfaces/recipe.models';
+import { RecipeDetailResponseDto, RecipeSearchRequestDto, RecipeSearchResponseDto } from '../../interfaces/recipe.models';
 import { PagedResult } from '../../interfaces/paged-result';
 import { RecipeCreatedResponseDto, RecipeCreateDto } from '../../interfaces/recipe-create.models';
 
@@ -14,7 +14,7 @@ export class RecipeService {
   private api = environment.apiBaseUrl;
 
   getById(recipeId: string) {
-    return this.http.get<any>(`${this.api}/Recipe/${recipeId}`);
+    return this.http.get<RecipeDetailResponseDto>(`${this.api}/Recipe/${recipeId}`);
   }
 
   create(dto: RecipeCreateDto): Observable<RecipeCreatedResponseDto> {

@@ -15,7 +15,7 @@ export class PantryService {
     return this.http.get<PantryItemDto[]>(`${this.api}/PantryItem`);
   }
 
-  upsert(dto: { ingredientId: string; quantity: number; unit: number }): Observable<PantryItemDto | void> {
+  upsert(dto: { ingredientName: string; quantity: number; unit: number }): Observable<PantryItemDto | void> {
     return this.http.post<PantryItemDto | void>(`${this.api}/PantryItem`, dto);
   }
 

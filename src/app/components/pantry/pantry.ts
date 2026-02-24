@@ -56,49 +56,14 @@ export class Pantry implements OnInit {
     });
   }
 
-  startEdit(item: PantryItemDto) {
-    this.editingId.set(item.ingredientId);
-    this.editQuantity.set(item.quantity ?? 0);
-    this.editUnit.set(item.unit as Unit);
-  }
-
-  cancelEdit() {
-    this.editingId.set(null);
-    this.editQuantity.set(null);
-    this.editUnit.set(Unit.Gram);
-  }
-
-  saveEdit(item: PantryItemDto) {
-    const q = this.editQuantity();
-    const u = this.editUnit();
-
-    if (q === null || q < 0) {
-      this.error.set('Quantité invalide.');
-      return;
-    }
-
-    this.pantryService.upsert({
-      ingredientId: item.ingredientId,
-      quantity: q,
-      unit: u,
-    }).subscribe({
-      next: () => {
-        this.cancelEdit();
-        this.load();
-      },
-      error: (err) => {
-        this.error.set(err?.error?.message ?? 'Erreur modification');
-      },
-    });
-  }
+  
 
   addNew() {
-    // ✅ Option A: uniquement ingredientId + quantity + unit
-    const ingredientId = this.newIngredientId().trim();
+    const ingredientName = this.newIngredientName().trim();
     const q = this.newQuantity();
     const u = this.newUnit();
 
-    if (!ingredientId) {
+    if (!ingredientName) {
       this.error.set("IngredientId requis (pour l'instant).");
       return;
     }
@@ -108,12 +73,11 @@ export class Pantry implements OnInit {
     }
 
     this.pantryService.upsert({
-      ingredientId,
+      ingredientName: ingredientName,
       quantity: q,
       unit: u,
     }).subscribe({
       next: () => {
-        this.newIngredientId.set('');
         this.newIngredientName.set('');
         this.newQuantity.set(null);
         this.newUnit.set(Unit.Gram);
@@ -142,3 +106,41 @@ export class Pantry implements OnInit {
   }
 
 }
+
+
+
+  // startEdit(item: PantryItemDto) {
+  //   this.editingId.set(item.ingredientId);
+  //   this.editQuantity.set(item.quantity ?? 0);
+  //   this.editUnit.set(item.unit as Unit);
+  // }
+
+  // cancelEdit() {
+  //   this.editingId.set(null);
+  //   this.editQuantity.set(null);
+  //   this.editUnit.set(Unit.Gram);
+  // }
+
+  // saveEdit(item: PantryItemDto) {
+  //   const q = this.editQuantity();
+  //   const u = this.editUnit();
+
+  //   if (q === null || q < 0) {
+  //     this.error.set('Quantité invalide.');
+  //     return;
+  //   }
+
+  //   this.pantryService.upsert({
+  //     ingredientId: item.ingredientId,
+  //     quantity: q,
+  //     unit: u,
+  //   }).subscribe({
+  //     next: () => {
+  //       this.cancelEdit();
+  //       this.load();
+  //     },
+  //     error: (err) => {
+  //       this.error.set(err?.error?.message ?? 'Erreur modification');
+  //     },
+  //   });
+  // }

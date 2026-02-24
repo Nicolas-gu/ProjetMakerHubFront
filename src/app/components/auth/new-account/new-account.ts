@@ -21,9 +21,9 @@ export class NewAccount {
 
   // Change l'état du bouton submit
   loading = signal(false);
+  errorMessage = signal<string | null>(null);
 
-  error = signal<string | null>(null);
-
+  // Création formulaire
   registerForm = this.fb.nonNullable.group({
     displayName: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(2)]),
     email: this.fb.nonNullable.control('', [Validators.required, Validators.email]),
@@ -31,19 +31,20 @@ export class NewAccount {
     confirmPassword: this.fb.nonNullable.control('', [Validators.required]),
   });
 
-  submit() {
-    this.error.set(null);
+  // Logique formulaire
+  onSubmit() {
+    this.errorMessage.set(null);
     this.registerForm.markAllAsTouched();
 
     if (this.registerForm.invalid) {
-      this.error.set('Formulaire invalide.');
+      this.errorMessage.set('Formulaire invalide.');
       return;
     }
 
     const { displayName, email, password, confirmPassword } = this.registerForm.getRawValue();
 
     if (password !== confirmPassword) {
-      this.error.set('Les mots de passe ne correspondent pas.');
+      this.errorMessage.set('Les mots de passe ne correspondent pas.');
       return;
     }
 
@@ -59,11 +60,11 @@ export class NewAccount {
         this.loading.set(false);
 
         if (err?.status === 409) {
-          this.error.set(err?.error?.message ?? 'Email déjà utilisé.');
+          this.errorMessage.set(err?.error?.message ?? 'Email déjà utilisé.');
           return;
         }
 
-        this.error.set('Erreur lors de la création du compte.');
+        this.errorMessage.set('Erreur lors de la création du compte.');
       }
     });
   }

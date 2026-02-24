@@ -42,7 +42,6 @@ export class RecipeEdit {
   selectedFile: File | null = null;
   selectedFileName = signal<string | null>(null);
 
-  // form
   form = this.fb.nonNullable.group({
     title: this.fb.nonNullable.control('', Validators.required),
     description: this.fb.nonNullable.control('', Validators.required),
@@ -57,7 +56,6 @@ export class RecipeEdit {
     ingredients: this.fb.array<IngredientFG>([]), // on pousse des FormGroup
   });
 
-  // champs d'ajout
   stepText = this.fb.nonNullable.control('', Validators.required);
 
   ingredientName = this.fb.nonNullable.control('', Validators.required);
@@ -86,7 +84,6 @@ export class RecipeEdit {
         this.tagsLoading.set(false);
       },
       error: () => {
-        // pas bloquant : edit marche même sans tags
         this.tagsLoading.set(false);
       }
     });
@@ -147,21 +144,15 @@ export class RecipeEdit {
           cookTime: r.cookTime ?? 0,
           isPublic: !!r.isPublic,
           tagIds: r.tagIds
-          //
+         });
 
-        });
-
-        // steps
         this.stepsFA.clear();
         for (const s of (r.steps ?? [])) {
           this.stepsFA.push(this.fb.nonNullable.control(String(s)));
         }
 
-        // ingredients
         this.ingredientsFA.clear();
         for (const i of (r.ingredients ?? [])) {
-          // ton DTO détail renvoie: { name, quantity, quantityText, unit }
-          // ton DTO update attend: baseQuantity + unit OU quantityText
           const fg = this.makeIngredientFG({
             name: i.name,
             baseQuantity: i.quantity ?? null,
@@ -253,7 +244,6 @@ export class RecipeEdit {
 
     this.recipeService.update(this.recipeId, dto).subscribe({
       next: () => {
-        // ✅ si on a choisi une image, on l’upload après l’update
         if (this.selectedFile) {
           this.recipeService.uploadImage(this.recipeId, this.selectedFile).subscribe({
             next: () => {
@@ -264,8 +254,7 @@ export class RecipeEdit {
               console.error('upload image error', err);
               this.saving.set(false);
               this.error.set("Recette mise à jour, mais l'image n'a pas pu être upload.");
-              // tu peux quand même naviguer si tu veux
-              // this.router.navigate(['/recipe', this.recipeId]);
+             
             }
           });
         } else {

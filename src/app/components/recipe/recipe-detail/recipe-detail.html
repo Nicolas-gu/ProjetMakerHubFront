@@ -1,7 +1,6 @@
 <div class="page-shell">
   <section class="card card--wide recipe-detail-card">
 
-    <!-- HEADER -->
     <header class="head">
 
   @if (data(); as r) {
@@ -12,7 +11,6 @@
                 <mat-icon>add</mat-icon>
             </button>
             }
-      <!-- Favori -->
       <button
         class="btn btn-square"
         type="button"
@@ -26,7 +24,6 @@
 
       @if (isAdmin || isOwner) {
 
-        <!-- Modifier -->
         <button
           class="btn btn-square"
           type="button"
@@ -35,7 +32,6 @@
           <mat-icon>edit</mat-icon>
         </button>
 
-        <!-- Supprimer -->
         <button
           class="btn btn-square danger"
           type="button"
@@ -51,7 +47,6 @@
 
 </header>
 
-    <!-- STATES (fixes) -->
     @if (loading()) {
       <div class="state">Chargement…</div>
     }
@@ -60,12 +55,10 @@
       <div class="state error">{{ error() }}</div>
     }
 
-    <!-- ✅ SCROLLABLE CONTENT -->
     <div class="card-scroll">
 
       @if (data(); as r) {
 
-        <!-- HERO -->
         <div class="hero">
           <div class="image">
             @if (r.imageUrl) {
@@ -95,7 +88,6 @@
           </div>
         </div>
 
-        <!-- INGREDIENTS -->
         <section class="block">
           <div class="block-title">Ingrédients</div>
 
@@ -118,7 +110,6 @@
           </div>
         </section>
 
-        <!-- STEPS -->
         <section class="block">
           <div class="block-title">Étapes</div>
 

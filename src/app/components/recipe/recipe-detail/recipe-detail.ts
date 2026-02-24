@@ -36,7 +36,9 @@ export class RecipeDetail {
   loading = signal(true);
   error = signal<string | null>(null);
   data = signal<RecipeDetailResponseDto | null>(null);
+
   unitLabel = unitLabel
+
   recipeId = '';
 
   isOwner = false;
@@ -51,19 +53,15 @@ export class RecipeDetail {
   }
 
   ngOnInit() {
-    // 1) lire les query params pour savoir si on vient du planning
     const qp = this.route.snapshot.queryParamMap;
 
     this.planningMode = qp.get('from') === 'planning';
     this.targetDay = qp.get('day');
 
-    // attention : tu avais parfois weekstart en minuscule
     this.targetWeekStart = qp.get('weekStart') ?? qp.get('weekstart');
 
-    // type doit devenir SlotType | null
     this.targetType = parseSlotType(qp.get('type'));
 
-    // 2) lire le param route /recipe/:recipeId
     const id = this.route.snapshot.paramMap.get('recipeId');
     if (!id) {
       this.error.set('RecipeId manquant.');
@@ -94,7 +92,6 @@ export class RecipeDetail {
       recipeId: this.recipeId,
     }).subscribe({
       next: () => {
-        // revenir sur home en gardant semaine + jour
         this.router.navigate(['/home'], { queryParams: { weekStart, day } });
       },
       error: (err) => {
@@ -109,11 +106,12 @@ export class RecipeDetail {
     this.error.set(null);
 
     this.recipeService.getById(this.recipeId).subscribe({
-      next: (res: any) => {
+      next: (res) => {
         this.data.set(res);
+
         const userId = this.tokenService.getUserId();
         this.isAdmin = this.tokenService.isAdmin();
-        this.isOwner = res.createdByUserId === userId;
+        this.isOwner = res.createdBy === userId;
         this.loading.set(false);
       },
       error: (err) => {
@@ -124,28 +122,24 @@ export class RecipeDetail {
   }
 
   toggleFavorite() {
-    const r = this.data();
+    const r = this.data(); // Récupère la recette
     if (!r) return;
 
-    // on change l'affichage tout de suite (optimistic)
     const newValue = !r.isFavorite;
-    this.data.set({ ...r, isFavorite: newValue });
+    this.data.set({ ...r, isFavorite: newValue }); // Maj immédiate de favorite (UI)
 
-    const call$ = newValue
+    const call$ = newValue  // Appel API selon état
       ? this.recipeService.addFavorite(this.recipeId)
       : this.recipeService.removeFavorite(this.recipeId);
 
     call$.subscribe({
       next: () => {
-        // ok, rien à faire
       },
-      error: (err) => {
-        console.error('toggle favorite error', err);
-
+      error: () => {
         // rollback
         const cur = this.data();
         if (cur) this.data.set({ ...cur, isFavorite: !newValue });
-
+        
         this.error.set("Impossible de modifier le favori.");
       }
     });

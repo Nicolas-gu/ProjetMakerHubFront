@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, signal } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -23,9 +23,8 @@ export class Login {
   private cdr = inject(ChangeDetectorRef)
 
   // Change l'état du bouton submit
-  loading = false;
-
-  errorMessage = '';
+  loading = signal(false);
+  errorMessage = signal<string | null>(null);
 
   // Création formulaire
   loginForm = this.fb.nonNullable.group({
@@ -35,13 +34,10 @@ export class Login {
 
   // Logique formulaire
   onSubmit(): void {
-    if (this.loginForm.invalid || this.loading){
+    if (this.loginForm.invalid || this.loading()){
       this.loginForm.markAllAsTouched();
       return;
     } 
-
-    this.errorMessage = '';
-    this.loading = true;
 
     // Récup valeur formulaire = LoginRequestDto
     const dto = this.loginForm.getRawValue();
@@ -49,7 +45,7 @@ export class Login {
     this.authService.login(dto).pipe(
       finalize(() => {
         // Reset toujours loading
-        this.loading = false;
+        this.loading.set(false);
         this.cdr.markForCheck();
       })
     ).subscribe({
@@ -59,7 +55,7 @@ export class Login {
       },
       error: (err) => {
         if (err.status === 401) {
-          this.errorMessage = 'Email ou mot de passe incorrect';
+          this.errorMessage.set('Email ou mot de passe incorrect');
         }
         this.loginForm.markAllAsTouched();
         this.cdr.markForCheck();
