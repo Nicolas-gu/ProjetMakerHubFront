@@ -51,7 +51,7 @@ export class Login {
     ).subscribe({
       next: () => {
         this.cdr.markForCheck();
-        this.router.navigateByUrl('/');
+        this.router.navigateByUrl('/home');
       },
       error: (err) => {
         if (err.status === 401) {

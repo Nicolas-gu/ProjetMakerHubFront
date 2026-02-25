@@ -34,5 +34,5 @@ export const routes: Routes = [
     { path: "pantry", 
         loadComponent: () => import("./components/pantry/pantry").then(r => r.Pantry), canActivate: [authGuard]
     },
-    { path: "", redirectTo: 'home', pathMatch: 'full' },
+    { path: "", redirectTo: 'login', pathMatch: 'full' }
 ];
