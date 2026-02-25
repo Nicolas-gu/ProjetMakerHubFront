@@ -7,6 +7,7 @@ import { PlanningService } from '../../../core/services/planning-service';
 import { PlanWeekDto, SlotType } from '../../../interfaces/Planning.models';
 import { addDays, toDayStart, toIsoDate, weekStartMonday } from '../../../shared/date-utils';
 import { MatIconModule } from '@angular/material/icon';
+import { StateService } from '../../../core/services/state-service';
 @Component({
   selector: 'app-planning',
   standalone: true,
@@ -18,6 +19,7 @@ export class Planning implements OnInit {
   private planningService = inject(PlanningService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private stateService = inject(StateService);
 
   weekStartChange = output<Date>();
 
@@ -57,6 +59,7 @@ export class Planning implements OnInit {
   });
 
   ngOnInit(): void {
+    this.stateService.setIsPanningMode(false);
     const today = new Date();
     this.buildWeekOptions(today);
     
@@ -147,22 +150,20 @@ export class Planning implements OnInit {
   }
 
   onPointerUp() {
+    if (!this.dragging) return;
 
-  if (!this.dragging) return;
+    const dx = this.dragX();
+    const threshold = 60;
 
-  const dx = this.dragX();
-  const threshold = 60;
+    if (dx <= -threshold) {
+      this.nextCard();
+    } else if (dx >= threshold) {
+      this.prevCard();
+    }
 
-  if (dx <= -threshold) {
-    this.nextCard();
-  } else if (dx >= threshold) {
-    this.prevCard();
+    this.dragging = false;
+    this.dragX.set(0);
   }
-
-
-  this.dragging = false;
-  this.dragX.set(0);
-}
 
 
   onCardClick(i: number) {
@@ -211,12 +212,13 @@ export class Planning implements OnInit {
     const type = this.addMenuType();
     if (!day || !type) return;
 
+    this.stateService.setIsPanningMode(true);
+
     this.router.navigate(['/recipe/search'], {
       queryParams: {
         day: toIsoDate(day),
         type: type,
         weekStart: toIsoDate(this.selectedWeekStart()),
-        from: 'planning'
       }
     });
     this.closeAddMenu();
@@ -227,12 +229,13 @@ export class Planning implements OnInit {
     const type = this.addMenuType();
     if (!day || !type) return;
 
+    this.stateService.setIsPanningMode(true);
+
     this.router.navigate(['/recipe/favorite'], {
       queryParams: {
         day: toIsoDate(day),
         type: type,
         weekStart: toIsoDate(this.selectedWeekStart()),
-        from: 'planning'
       }
     });
     this.closeAddMenu();
@@ -275,8 +278,6 @@ export class Planning implements OnInit {
     });
   }
 }
-
-
 
 function parseIsoDate(iso: string): Date | null {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);

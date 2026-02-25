@@ -8,11 +8,14 @@
     @if(isLoggedIn()){
         <button matButton [matMenuTriggerFor]="menu" class="btn btn-square nav-button"><mat-icon>menu</mat-icon></button>
             <mat-menu #menu="matMenu" class="mf-menu">
-                <button mat-menu-item (click)="goShoppingList()">Liste de courses</button>
-                <button mat-menu-item routerLink="recipe/favorite" >Recettes favorites</button>
-                <button mat-menu-item routerLink="pantry">Ingrédients à la maison</button>
-                <button mat-menu-item routerLink="recipe/search">Chercher une recette</button>
-                <button mat-menu-item (click)="logout()">Déconnexion</button>
+                @for(item of links; track $index) {
+                    @if(item.href) {
+                        <button mat-menu-item (click)="stateService.setIsPanningMode(false)" [routerLink]="item.href">{{item.title}}</button>
+                    }
+                    @else {
+                        <button mat-menu-item (click)="item?.handler()">{{item.title}}</button>
+                    }
+                }
             </mat-menu>
     }
 </div>

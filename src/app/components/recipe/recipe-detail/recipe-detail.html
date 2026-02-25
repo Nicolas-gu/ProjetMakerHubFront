@@ -6,7 +6,7 @@
   @if (data(); as r) {
     <div class="head-actions">
 
-        @if (planningMode) {
+        @if (planningMode()) {
             <button class="btn btn-square" type="button" (click)="addToPlanning()">
                 <mat-icon>add</mat-icon>
             </button>

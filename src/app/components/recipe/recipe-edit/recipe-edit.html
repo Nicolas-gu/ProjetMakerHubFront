@@ -54,27 +54,7 @@
                 <input class="input" type="number" min="0" formControlName="cookTime" />
               </div>
             </div>
-            <section class="block">
-              <div class="block-head">
-                <div class="block-title">Tags</div>
-                <div class="block-sub">Clique pour sélectionner</div>
-              </div>
-              @if (tagsLoading()) {
-                <div class="state">Chargement des tags…</div>
-              } @else {
-                <div class="tags">
-                  @for (t of allTags(); track t.id) {
-                    <button
-                      class="tag"
-                      type="button"
-                      [class.tag--on]="isTagSelected(t.id)"
-                      (click)="toggleTag(t.id)">
-                      {{ t.name }}
-                    </button>
-                  }
-                </div>
-              }
-            </section>
+            
             <section class="block">
               <div class="block-head">
                 <div class="block-title">Ingrédients</div>
@@ -91,9 +71,9 @@
                   <option [ngValue]="Unit.Milliliter">ml</option>
                   <option [ngValue]="Unit.Liter">L</option>
                   <option [ngValue]="Unit.Piece">pc</option>
-                  <option [ngValue]="Unit.Teaspoon">tsp</option>
-                  <option [ngValue]="Unit.Tablespoon">tbsp</option>
-                  <option [ngValue]="Unit.Pinch">pinch</option>
+                  <option [ngValue]="Unit.Teaspoon">càc</option>
+                  <option [ngValue]="Unit.Tablespoon">càs</option>
+                  <option [ngValue]="Unit.Pinch">pincée</option>
                 </select>
                 <input class="input qty-text" [formControl]="ingredientQuantityText" placeholder="ou texte (ex: 1 boîte)" />
                 <button class="btn" type="button" (click)="addIngredient()">Ajouter</button>
@@ -155,3 +135,31 @@
     }
   </section>
 </div>
+
+
+
+
+
+
+
+<!-- <section class="block">
+              <div class="block-head">
+                <div class="block-title">Tags</div>
+                <div class="block-sub">Clique pour sélectionner</div>
+              </div>
+              @if (tagsLoading()) {
+                <div class="state">Chargement des tags…</div>
+              } @else {
+                <div class="tags">
+                  @for (t of allTags(); track t.id) {
+                    <button
+                      class="tag"
+                      type="button"
+                      [class.tag--on]="isTagSelected(t.id)"
+                      (click)="toggleTag(t.id)">
+                      {{ t.name }}
+                    </button>
+                  }
+                </div>
+              }
+            </section> -->

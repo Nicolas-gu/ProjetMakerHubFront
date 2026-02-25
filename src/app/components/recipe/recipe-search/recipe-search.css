@@ -5,7 +5,6 @@
   min-height: 0;
 }
 
-
 .head{
   display: grid;
   gap: 6px;
@@ -18,21 +17,16 @@
   color: var(--color-text-primary);
 }
 
-
 .sub{
   font-size: 12px;
   color: var(--color-text-primary);
   opacity: .85;
-
   padding: 6px 10px;
   border-radius: 999px;
-
   background: rgba(0, 230, 168, 0.10);
   border: 1px solid rgba(0, 230, 168, 0.22);
-
   width: fit-content;
 }
-
 
 .searchbar{
   margin: 12px 0 14px;
@@ -43,10 +37,8 @@
   height: 44px;
   border-radius: 14px;
   padding: 0 12px;
-
   background: rgba(0,0,0,0.22);
   border: 1px solid rgba(0, 230, 168, 0.14);
-
   color: var(--color-text-primary);
 }
 
@@ -54,14 +46,12 @@
   color: rgba(234, 246, 239, 0.45);
 }
 
-
 .card-scroll{
   flex: 1 1 auto;
   min-height: 0;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
 }
-
 
 .list{
   display: grid;
@@ -73,14 +63,11 @@
   grid-template-columns: 1fr auto;
   gap: 10px;
   align-items: center;
-
   padding: 12px;
   border-radius: 14px;
-
   background: rgba(0,0,0,0.18);
   border: 1px solid rgba(0, 230, 168, 0.10);
 }
-
 
 .row-main{
   border: 0;
@@ -88,7 +75,6 @@
   text-align: left;
   cursor: pointer;
   padding: 0;
-
   color: var(--color-text-primary); 
 }
 
@@ -102,7 +88,6 @@
   font-size: 12px;
   margin-top: 4px;
 }
-
 
 .state{
   margin-top: 10px;

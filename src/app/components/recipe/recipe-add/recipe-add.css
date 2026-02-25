@@ -101,9 +101,17 @@
   border-top: 1px solid rgba(0, 230, 168, 0.10);
 }
 
-.block-head{ margin-bottom: 10px; }
-.block-title{ font-weight: 900; font-size: 14px; }
-.block-sub{ font-size: 12px; opacity: .75; margin-top: 4px; }
+.block-head{
+  margin-bottom: 10px; 
+}
+
+.block-title{ 
+  font-weight: 900; font-size: 14px; 
+}
+
+.block-sub{ 
+  font-size: 12px; opacity: .75; margin-top: 4px; 
+}
 
 .ing-add{
   display: grid;
@@ -113,9 +121,17 @@
   margin: 10px 0 10px;
 }
 
-.qty-num{ min-width: 0; }
-.qty-unit{ min-width: 0; }
-.qty-text{ min-width: 0; }
+.qty-num{ 
+  min-width: 0; 
+}
+
+.qty-unit{ 
+  min-width: 0; 
+}
+
+.qty-text{ 
+  min-width: 0; 
+}
 
 @media (max-width: 720px){
   .recipe-head{
@@ -141,6 +157,7 @@
   gap: 8px;
   margin: 8px 0 12px;
 }
+
 .suggest-item{
   padding: 8px 10px;
   border-radius: 999px;
@@ -167,9 +184,17 @@
   border: 1px solid rgba(0, 230, 168, 0.10);
 }
 
-.row-main{ min-width: 0; }
-.r-title{ font-weight: 900; }
-.r-meta{ opacity: .75; font-size: 12px; margin-top: 4px; }
+.row-main{ 
+  min-width: 0; 
+}
+
+.r-title{ 
+  font-weight: 900; 
+}
+
+.r-meta{ 
+  opacity: .75; font-size: 12px; margin-top: 4px; 
+}
 
 .row-actions{
   display: flex;

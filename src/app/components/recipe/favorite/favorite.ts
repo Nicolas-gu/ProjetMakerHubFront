@@ -7,6 +7,7 @@ import { CommonModule, Location } from '@angular/common';
 import { RecipeService } from '../../../core/services/recipe-service';
 import { RecipeSearchResponseDto } from '../../../interfaces/recipe.models';
 import { MatIconModule } from '@angular/material/icon';
+import { StateService } from '../../../core/services/state-service';
 
 @Component({
   selector: 'app-favorite',
@@ -20,9 +21,10 @@ export class Favorite implements OnInit {
   private route = inject(ActivatedRoute);
   private planningService = inject(PlanningService);
   private recipeService = inject(RecipeService);
+  private stateService = inject(StateService);
   private location = inject(Location)
 
-  planningMode = false;
+  planningMode = this.stateService.isPanningMode;
   targetDay: string | null = null;
   targetType: SlotType | null = null;
   targetWeekStart: string | null = null;
@@ -35,7 +37,6 @@ export class Favorite implements OnInit {
 
   ngOnInit(): void {
     const qp = this.route.snapshot.queryParamMap;
-    this.planningMode = qp.get('from') === 'planning';
     this.targetDay = qp.get('day');
     this.targetWeekStart = qp.get('weekStart');
     this.targetType = parseSlotType(qp.get('type'));
@@ -60,10 +61,9 @@ export class Favorite implements OnInit {
   }
 
   openRecipe(id: string) {
-    if (this.planningMode) {
+    if (this.planningMode()) {
       this.router.navigate(['/recipe', id], {
         queryParams: {
-          from: 'planning',
           day: this.targetDay,
           type: this.targetType,          
           weekStart: this.targetWeekStart

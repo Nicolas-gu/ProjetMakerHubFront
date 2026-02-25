@@ -51,7 +51,6 @@ export class ShoppingList implements OnInit{
 
       },
       error: (err) => {
-        this.error = err?.error?.message ?? 'Erreur chargement liste de courses';
         this.loading.set(false);
       }
   });

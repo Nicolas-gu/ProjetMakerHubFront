@@ -7,6 +7,7 @@ import { RecipeCreateDto } from '../../../interfaces/recipe-create.models';
 import { RecipeService } from '../../../core/services/recipe-service';
 import { IngredientFG } from '../../../shared/ingredient-fg';
 import { MatIconModule } from '@angular/material/icon';
+import { unitLabel } from '../../../shared/unit-utils';
 
 @Component({
   selector: 'app-recipe-add',
@@ -29,6 +30,8 @@ export class RecipeAdd {
   error = signal<string | null>(null);
 
   selectedFile: File | null = null;
+
+  unitLabel = unitLabel
 
   // Création du formulaire principal
   form = this.fb.nonNullable.group({

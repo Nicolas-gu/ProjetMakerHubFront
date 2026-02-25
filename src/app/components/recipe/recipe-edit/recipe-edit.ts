@@ -242,7 +242,7 @@ export class RecipeEdit {
       steps: this.stepsFA.controls.map(c => c.value),
       ingredients: this.ingredientsFA.controls.map((g: any) => ({
         name: g.controls.name.value,
-        baseQuantity: g.controls.baseQuantity.value,
+        quantity: g.controls.baseQuantity.value,
         unit: g.controls.unit.value,
         quantityText: g.controls.quantityText.value,
       })),

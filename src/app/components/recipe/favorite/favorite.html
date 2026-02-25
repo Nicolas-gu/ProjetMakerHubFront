@@ -2,7 +2,7 @@
   <section class="card card--wide">
     <div class="head">
       <div class="title">Favoris</div>
-      @if (planningMode) {
+      @if (planningMode()) {
         <div class="sub">Ajout au planning • {{ targetDay }} • slot {{ targetType }}</div>
       }
     </div>
@@ -24,7 +24,7 @@
               </div>
             </button>
   
-            @if (planningMode) {
+            @if (planningMode()) {
               <button
                 class="btn btn-square"
                 type="button"

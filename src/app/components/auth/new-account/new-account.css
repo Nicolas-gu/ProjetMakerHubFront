@@ -60,11 +60,9 @@
   border-radius: 16px;
   padding: 0 14px;
   outline: none;
-
   color: var(--color-text-primary);
   background: rgba(18, 18, 18, 0.52);
   border: 1px solid var(--border-strong);
-
   box-shadow:
     0 0 0 1px rgba(0, 0, 0, 0.20) inset,
     0 10px 24px rgba(0, 0, 0, 0.28);

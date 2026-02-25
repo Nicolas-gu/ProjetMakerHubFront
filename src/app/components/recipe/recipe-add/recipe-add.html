@@ -56,9 +56,9 @@
               <option [ngValue]="Unit.Milliliter">ml</option>
               <option [ngValue]="Unit.Liter">L</option>
               <option [ngValue]="Unit.Piece">pc</option>
-              <option [ngValue]="Unit.Teaspoon">tsp</option>
-              <option [ngValue]="Unit.Tablespoon">tbsp</option>
-              <option [ngValue]="Unit.Pinch">pinch</option>
+              <option [ngValue]="Unit.Teaspoon">càc</option>
+              <option [ngValue]="Unit.Tablespoon">càs</option>
+              <option [ngValue]="Unit.Pinch">pincée</option>
             </select>
             <input class="input qty-text" [formControl]="ingredientQuantityText"
                    placeholder="ou texte (ex: 1 boîte)" />
@@ -73,7 +73,7 @@
                     @if (g.controls.quantityText.value) {
                       {{ g.controls.quantityText.value }}
                     } @else {
-                      {{ g.controls.baseQuantity.value }} {{ (g.controls.unit.value) }}
+                      {{ g.controls.baseQuantity.value }} {{ unitLabel(g.controls.unit.value) }}
                     }
                   </div>
                 </div>

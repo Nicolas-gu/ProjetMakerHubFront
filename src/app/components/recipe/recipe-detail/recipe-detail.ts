@@ -10,6 +10,7 @@ import { PlanningService } from '../../../core/services/planning-service';
 import { SlotType } from '../../../interfaces/Planning.models';
 import { parseSlotType } from '../../../shared/slot-type-utils';
 import { Location } from '@angular/common';
+import { StateService } from '../../../core/services/state-service';
 
 
 @Component({
@@ -26,9 +27,10 @@ export class RecipeDetail {
   private recipeService = inject(RecipeService);
   private tokenService = inject(TokenService);
   private planningService = inject(PlanningService)
+  private stateService = inject(StateService);
   private location = inject(Location)
 
-  planningMode = false;
+  planningMode = this.stateService.isPanningMode;
   targetDay: string | null = null;
   targetType: SlotType | null = null;
   targetWeekStart: string | null = null;
@@ -57,7 +59,7 @@ export class RecipeDetail {
   ngOnInit() {
     // recup info ds les query
     const qp = this.route.snapshot.queryParamMap;
-    this.planningMode = qp.get('from') === 'planning';
+    //this.planningMode = qp.get('from') === 'planning';
     this.targetDay = qp.get('day');
     this.targetWeekStart = qp.get('weekStart');
     this.targetType = parseSlotType(qp.get('type'));
@@ -165,8 +167,15 @@ export class RecipeDetail {
         this.router.navigate(['/home']);
       },
       error: (err) => {
-        console.error('delete recipe error', err);
-        this.error.set('Suppression impossible.');
+        if (err.status === 409) {
+          this.error.set("Impossible : la recette est utilisée dans un planning.");
+        } else if (err.status === 403) {
+          this.error.set("Impossible : vous n’avez pas les droits.");
+        } else if (err.status === 404) {
+          this.error.set("Recette introuvable.");
+        } else {
+          this.error.set("Suppression impossible.");
+        }
       }
     });
   }

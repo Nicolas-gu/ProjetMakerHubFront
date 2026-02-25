@@ -12,12 +12,12 @@
       <div class="state">Aucune liste pour cette semaine.</div>
     }
 
+    <div class="add">
+      <input class="input" [(ngModel)]="newIngredientName" placeholder="Ajouter un ingrédient (ex: tomates)" />
+      <input class="input" [(ngModel)]="newQuantityText" placeholder="Quantité (ex: 2kg / 3 pcs)" />
+      <button class="btn" type="button" (click)="addManual()">Ajouter</button>
+    </div>
     @if (data()) { 
-      <div class="add">
-        <input class="input" [(ngModel)]="newIngredientName" placeholder="Ajouter un ingrédient (ex: tomates)" />
-        <input class="input" [(ngModel)]="newQuantityText" placeholder="Quantité (ex: 2kg / 3 pcs)" />
-        <button class="btn" type="button" (click)="addManual()">Ajouter</button>
-      </div>
       <div class="card-scroll">
         <div class="list">
           @for (it of data()!.items; track it.id) {

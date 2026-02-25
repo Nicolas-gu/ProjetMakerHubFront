@@ -5,18 +5,12 @@
   right: 0;
   height: 80px;
   z-index: 1000;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
-
   padding: 15px;
-
-  
-
   color: var(--color-text-primary);
 }
-
 
 .main-nav-bar.centered{
     justify-content: center;
